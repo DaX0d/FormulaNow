@@ -1,12 +1,16 @@
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from settings import *
 
-next_race_button = InlineKeyboardButton(text=next_race_button_text)
-schedule_button = InlineKeyboardButton(text=schedule_button_text)
+next_race_button = KeyboardButton(text=next_race_button_text)
+schedule_button = KeyboardButton(text=schedule_button_text)
+track_button = KeyboardButton(text=track_button_text)
+standings_button = KeyboardButton(text=standings_button_text)
+teams_button = KeyboardButton(text=teams_button_text)
 
 layout = [
-    [next_race_button],
-    [schedule_button]
+    [next_race_button, schedule_button],
+    [track_button, standings_button],
+    [teams_button]
 ]
 
-home_markup = InlineKeyboardMarkup(inline_keyboard=layout)
+home_markup = ReplyKeyboardMarkup(keyboard=layout)
