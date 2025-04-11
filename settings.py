@@ -1,16 +1,16 @@
 # Ответы на сообщения
 start_ans = 'Привет! Я FormulaNow — твой бот по Формуле 1. Я расскажу тебе, когда будет следующая гонка, кто лидирует в чемпионате и многое другое. Вот что я умею:'
-next_race_ans = 'Здесь будет информация о следующей гонке'
+next_race_ans = '*Расписание следующей гонки*\n\n'
 schedule_ans = '*Расписание заездов 2025 года*\n\n'
 track_ans = 'Здесь будет информация о треке'
-standings_ans = 'Тут будет личный зечет'
+standings_ans = 'Тут будет личный зачет'
 teams_ans = 'Здесь будет кубок конструкторов'
 
 # Текста кнопок
 next_race_button_text = 'Следующая гонка'
 schedule_button_text = 'Расписание заездов'
 track_button_text = 'Трасса'
-standings_button_text = 'Личный зечет'
+standings_button_text = 'Личный зачет'
 teams_button_text = 'Кубок конструкторов'
 
 # Названия гран при
@@ -43,3 +43,4 @@ grand_prix_locations = [
 
 # Шаблоны 
 schedule_template = '>*{}*  *{}*   *{}*\n>    *Гонка*: {}   Квалификация: {}\n'
+next_race_template = '*{name}*\n>Пятница *{fr_date}*\n>    Практика 1: {fp1_t}\n>    {fp2_n}: {fp2_t}\n\n>Суббота *{sat_date}*\n>    {fp3_n}: {fp3_t}\n>    Квалификация: {q_t}\n\n>Воскресенье *{sun_date}*\n>    *Гонка*: {r_t}'

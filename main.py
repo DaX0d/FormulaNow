@@ -6,11 +6,10 @@ from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
 from aiogram.types import Message
 from aiogram.filters import Command
-from aiogram.utils.formatting import as_numbered_list, Bold, as_line
 
 from settings import *
 from markups import home_markup
-from parser import get_schedule
+from parser import get_schedule, get_next_race, parse_all
 
 load_dotenv('.env')
 TOKEN = os.getenv('TOKEN')
@@ -21,13 +20,57 @@ def msk(t: str) -> str:
     h = (int(t[:2].lstrip('0') or '0') + 3) % 24
     return '{:02d}{}'.format(h, t[2:])
 
+def prev_date(day, month, d) -> tuple[int, int]:
+    if day - d > 0:
+        return (day - d, month)
+    new_month = month - 1
+    if new_month - 1 < 8:
+        match new_month % 2:
+            case 0:
+                return (day - d + 30, new_month)
+            case 1:
+                return (day - d + 31, new_month)
+    else:
+        match new_month % 2:
+            case 0:
+                return (day - d + 31, new_month)
+            case 2:
+                return (day - d + 30, new_month)
+
 @dp.message(Command('start'))
 async def start_handler(message: Message):
     await message.answer(start_ans, reply_markup=home_markup)
 
 @dp.message(Command('next'))
 async def next_race_handler(message: Message):
-    await message.answer(next_race_ans)
+    ans = next_race_ans
+    next_race = get_next_race()
+    day, month = map(int, next_race['race_date'].split('.'))
+    if next_race['schedule']['sprintRace']['time']:
+        fp2_n = 'Квалификация к спринту'
+        fp2_t = msk(next_race['schedule']['sprintQualy']['time'][:-4])
+        fp3_n = 'Спринт'
+        fp3_t = msk(next_race['schedule']['sprintRace']['time'][:-4])
+    else:
+        fp2_n = 'Практика 2'
+        fp2_t = msk(next_race['schedule']['fp2']['time'][:-4])
+        fp3_n = 'Практика 3'
+        fp3_t = msk(next_race['schedule']['fp3']['time'][:-4])
+    information = next_race_template.format(
+        name=next_race['name'],
+        fr_date='{:02d}\\.{:02d}'.format(*prev_date(day, month, 2)),
+        sat_date='{:02d}\\.{:02d}'.format(*prev_date(day, month, 1)),
+        sun_date='{:02d}\\.{:02d}'.format(day, month),
+        fp1_t=msk(next_race['schedule']['fp1']['time'][:-4]),
+        fp2_t=fp2_t,
+        fp3_t=fp3_t,
+        q_t=msk(next_race['schedule']['qualy']['time'][:-4]),
+        r_t=msk(next_race['schedule']['race']['time'][:-4]),
+        fp2_n=fp2_n,
+        fp3_n=fp3_n
+    )
+    ans += information
+    await message.answer(ans, parse_mode='MarkdownV2')
 
 @dp.message(Command('schedule'))
 async def schedule_handler(message: Message):
@@ -47,7 +90,6 @@ async def schedule_handler(message: Message):
                 msk(schedule[i]['sq_time'][:-4])
             )
         ans += '\n'
-    # print(ans)
     await message.answer(ans, parse_mode='MarkdownV2')
 
 @dp.message(Command('track'))
@@ -79,6 +121,9 @@ async def buttons_handler(message: Message):
 
 async def main():
     await dp.start_polling(bot)
+    while True:
+        await parse_all()
+        time.sleep(600)
 
 if __name__ == '__main__':
     try:
