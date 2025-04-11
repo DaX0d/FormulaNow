@@ -9,7 +9,7 @@ from aiogram.filters import Command
 
 from settings import *
 from markups import home_markup
-from parser import get_schedule, get_next_race, parse_all
+from parser import get_schedule, get_next_race, parse_all, get_standings
 
 load_dotenv('.env')
 TOKEN = os.getenv('TOKEN')
@@ -98,7 +98,22 @@ async def track_handler(message: Message):
 
 @dp.message(Command('standings'))
 async def standings_handler(message: Message):
-    await message.answer(standings_ans)
+    ans = standings_ans
+    standings = get_standings()
+    i = 1
+    for name in standings['racers'].keys():
+        ini = name[0]
+        short_name = f'{ini}.{name[name.index(' ') + 1:]}'
+        ans += standings_template.format(
+            i,
+            short_name,
+            standings['racers'][name]
+        )
+        i += 1
+    ans = ans.replace('(', '\\(')
+    ans = ans.replace(')', '\\)')
+    # print(ans)
+    await message.answer(ans, parse_mode='MarkdownV2')
 
 @dp.message(Command('teams'))
 async def teams_handler(message: Message):

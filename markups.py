@@ -8,9 +8,9 @@ standings_button = KeyboardButton(text=standings_button_text)
 teams_button = KeyboardButton(text=teams_button_text)
 
 layout = [
+    [schedule_button],
     [standings_button, next_race_button],
-    [teams_button, schedule_button],
-    [track_button]
+    [teams_button, track_button]
 ]
 
 home_markup = ReplyKeyboardMarkup(keyboard=layout)

@@ -7,12 +7,12 @@ import datetime
 from settings import grand_prix_locations
 
 SCHEDULE_API = 'https://f1api.dev/api/current'
-SCHEDULE_URL = 'https://f-1world.ru/kalendar-gonok/8638-kalendar-jetapov-i-raspisanie-gonok-formuly-1-sezon-2025-goda.html'
 DRIVERS_URL = 'https://f-1world.ru/turnirnaja-tablica/9324-formula-1-turnirnaja-tablica-pilotov-sezon-2025-goda.html'
 TEAMS_URL = 'https://f-1world.ru/kubok-konstruktorov/9323-turnirnaja-tablica-kubka-konstruktorov-2025-goda.html'
 
 _schedule: list[dict] = []
 _next_track: dict = {}
+_standings: dict = {}
 
 async def parse_schedule():
     api = requests.get(SCHEDULE_API)
@@ -24,15 +24,34 @@ async def parse_schedule():
         print('Не удалось установить соединение с API')
 
 async def parse_standings():
-    ...
+    page = requests.get(DRIVERS_URL)
+    soup = BeautifulSoup(page.text, 'lxml')
+    table = soup.find('table')
+    rows = table.find_all('tr')[1:]
+    racers = {}
+    for row in rows:
+        name = '{} ({})'.format(row.find_all('td')[1].text.rstrip(' '), row.find_all('td')[2].text)
+        points = row.find_all('td')[5].text
+        racers[name] = int(points) if points else 0
+    with open('standings.json', 'r', encoding='utf-8') as file:
+        try:
+            data = json.load(file)
+        except json.decoder.JSONDecodeError:
+            data = {}
+    data['racers'] = racers
+    with open('standings.json', 'w', encoding='utf-8') as file:
+        json.dump(data, file)
 
 async def parse_teams():
     ...
 
 async def parse_all():
-    global _schedule, _next_track
+    global _schedule, _next_track, _standings
     await parse_schedule()
+    await parse_standings()
     _schedule = []
+    _next_track = {}
+    _standings = {}
 
 def get_schedule() -> list[dict]:
     global _schedule
@@ -78,5 +97,13 @@ def get_next_race() -> dict:
         raise ValueError()
     return _next_track
 
+def get_standings() -> dict:
+    global _standings
+    if not _standings:
+        with open('standings.json', 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        _standings = data
+    return _standings
+
 if __name__ == '__main__':
-    parse_all()
+    asyncio.run(parse_standings())
