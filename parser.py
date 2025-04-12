@@ -1,4 +1,3 @@
-import asyncio
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -14,7 +13,7 @@ _schedule: list[dict] = []
 _next_track: dict = {}
 _standings: dict = {}
 
-async def parse_schedule():
+def parse_schedule():
     api = requests.get(SCHEDULE_API)
     try:
         with open('schedule.json', 'w', encoding='utf-8') as file:
@@ -23,7 +22,8 @@ async def parse_schedule():
     except requests.exceptions.ConnectionError:
         print('Не удалось установить соединение с API')
 
-async def parse_standings():
+def parse_standings():
+    global _standings
     page = requests.get(DRIVERS_URL)
     soup = BeautifulSoup(page.text, 'lxml')
     table = soup.find('table')
@@ -33,25 +33,45 @@ async def parse_standings():
         name = '{} ({})'.format(row.find_all('td')[1].text.rstrip(' '), row.find_all('td')[2].text)
         points = row.find_all('td')[5].text
         racers[name] = int(points) if points else 0
-    with open('standings.json', 'r', encoding='utf-8') as file:
-        try:
-            data = json.load(file)
-        except json.decoder.JSONDecodeError:
-            data = {}
+    try:
+        with open('standings.json', 'r', encoding='utf-8') as file:
+                data = json.load(file)
+    except FileNotFoundError:
+        data = {}
+    except json.decoder.JSONDecodeError:
+        data = {}
     data['racers'] = racers
+    _standings['racers'] = racers
     with open('standings.json', 'w', encoding='utf-8') as file:
         json.dump(data, file)
 
-async def parse_teams():
-    ...
+def parse_teams():
+    global _standings
+    page = requests.get(TEAMS_URL)
+    soup = BeautifulSoup(page.text, 'lxml')
+    table = soup.find('table')
+    rows = table.find_all('tr')[1:]
+    teams = {}
+    for row in rows:
+        name = row.find_all('td')[1].text
+        points = int(row.find_all('td')[4].text)
+        teams[name] = points
+    with open('standings.json', 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    data['teams'] = teams
+    _standings['teams'] = teams
+    with open('standings.json', 'w', encoding='utf-8') as file:
+        json.dump(data, file)
 
-async def parse_all():
+def parse_all():
     global _schedule, _next_track, _standings
-    await parse_schedule()
-    await parse_standings()
+    print('Начало парсинга')
+    parse_schedule()
+    parse_standings()
+    parse_teams()
     _schedule = []
     _next_track = {}
-    _standings = {}
+    print('Парсинг успешно завершен')
 
 def get_schedule() -> list[dict]:
     global _schedule
@@ -106,4 +126,4 @@ def get_standings() -> dict:
     return _standings
 
 if __name__ == '__main__':
-    asyncio.run(parse_standings())
+    parse_all()

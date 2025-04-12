@@ -1,5 +1,4 @@
 import os
-import time
 import asyncio
 
 from dotenv import load_dotenv
@@ -112,12 +111,21 @@ async def standings_handler(message: Message):
         i += 1
     ans = ans.replace('(', '\\(')
     ans = ans.replace(')', '\\)')
-    # print(ans)
     await message.answer(ans, parse_mode='MarkdownV2')
 
 @dp.message(Command('teams'))
 async def teams_handler(message: Message):
-    await message.answer(teams_ans)
+    ans = teams_ans
+    teams = get_standings()['teams']
+    i = 1
+    for team in teams.keys():
+        ans += teams_template.format(
+            i,
+            team,
+            teams[team]
+        )
+        i += 1
+    await message.answer(ans, parse_mode='MarkdownV2')
 
 @dp.message()
 async def buttons_handler(message: Message):
@@ -134,11 +142,16 @@ async def buttons_handler(message: Message):
     else:
         await message.answer('Действие не распознано')
 
-async def main():
-    await dp.start_polling(bot)
+async def periodic_parser():
     while True:
-        await parse_all()
-        time.sleep(600)
+        parse_all()
+        print('Начало ожидания')
+        await asyncio.sleep(PARSE_DELAY)
+
+async def main():
+    asyncio.create_task(periodic_parser())
+    print('Бот запущен')
+    await dp.start_polling(bot)
 
 if __name__ == '__main__':
     try:
