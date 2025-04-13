@@ -3,7 +3,7 @@ import asyncio
 
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
-from aiogram.types import Message
+from aiogram.types import Message, FSInputFile
 from aiogram.filters import Command
 
 from settings import *
@@ -93,7 +93,17 @@ async def schedule_handler(message: Message):
 
 @dp.message(Command('track'))
 async def track_handler(message: Message):
-    await message.answer(track_ans)
+    next_race = get_next_race()
+    photo_file = FSInputFile(f'./static/{track_photoes[grand_prix_locations.index(next_race['name'])]}.jpg')
+    ans = track_ans + track_template.format(
+        next_race['name'],
+        next_race['track']['circuitName'],
+        next_race['track']['city'],
+        next_race['track']['circuitLength'][:-2] + ' м',
+        next_race['gp']['laps'],
+        next_race['track']['corners']
+    )
+    await message.answer_photo(photo_file, parse_mode='MarkdownV2', caption=ans)
 
 @dp.message(Command('standings'))
 async def standings_handler(message: Message):

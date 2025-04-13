@@ -105,12 +105,13 @@ def get_next_race() -> dict:
                 )
                 race_day, race_month = map(int, race_date.split('.'))
                 d = race_day - day + 30 * (race_month - month)
-                if d >= 0:
+                if d > 0 or d == 0 and int(datetime.time().strftime('%H')) - int(race['schedule']['race']['time'][:2]) > 6:
                     ret = {
                         'name': grand_prix_locations[race['round'] - 1],
                         'race_date': race_date,
                         'track': race['circuit'],
-                        'schedule': race['schedule']
+                        'schedule': race['schedule'],
+                        'gp': race
                     }
                     _next_track = ret
                     return _next_track
