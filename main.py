@@ -1,5 +1,6 @@
 import os
 import asyncio
+import logging
 
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
@@ -155,16 +156,16 @@ async def buttons_handler(message: Message):
 async def periodic_parser():
     while True:
         parse_all()
-        print('Начало ожидания')
         await asyncio.sleep(PARSE_DELAY)
 
 async def main():
     asyncio.create_task(periodic_parser())
-    print('Бот запущен')
+    logging.info('Bot started')
     await dp.start_polling(bot)
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
-        print('Exiting')
+        logging.info('Exiting')

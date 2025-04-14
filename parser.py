@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import datetime
+import logging
 
 from settings import grand_prix_locations
 
@@ -20,7 +21,7 @@ def parse_schedule():
             data = json.loads(api.text)
             json.dump(data, file)
     except requests.exceptions.ConnectionError:
-        print('Не удалось установить соединение с API')
+        logging.warning('Не удалось установить соединение с API')
 
 def parse_standings():
     global _standings
@@ -65,13 +66,16 @@ def parse_teams():
 
 def parse_all():
     global _schedule, _next_track, _standings
-    print('Начало парсинга')
-    parse_schedule()
-    parse_standings()
-    parse_teams()
-    _schedule = []
-    _next_track = {}
-    print('Парсинг успешно завершен')
+    try:
+        logging.info('Start parsing')
+        parse_schedule()
+        parse_standings()
+        parse_teams()
+        _schedule = []
+        _next_track = {}
+        logging.info('Parsing successfuly complited')
+    except:
+        logging.warning('Парсинг не удался')
 
 def get_schedule() -> list[dict]:
     global _schedule
