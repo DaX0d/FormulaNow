@@ -9,7 +9,13 @@ from aiogram.filters import Command
 
 from settings import *
 from markups import home_markup
-from parser import get_schedule, get_next_race, parse_all, get_standings
+from parser import (
+    get_schedule,
+    get_next_race, 
+    parse_all, 
+    get_standings,
+    get_last_race
+    )
 
 
 load_dotenv('.env')
@@ -88,7 +94,7 @@ async def next_race_handler(message: Message):
 
     ans += information
 
-    await message.answer(ans, parse_mode='MarkdownV2')
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
 
 
 @dp.message(Command('schedule'))
@@ -115,7 +121,7 @@ async def schedule_handler(message: Message):
         
         ans += '\n'
 
-    await message.answer(ans, parse_mode='MarkdownV2')
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
 
 
 @dp.message(Command('track'))
@@ -134,7 +140,7 @@ async def track_handler(message: Message):
         next_race['track']['corners']
     )
 
-    await message.answer_photo(photo_file, parse_mode='MarkdownV2', caption=ans)
+    await message.answer_photo(photo_file, parse_mode='MarkdownV2', caption=ans, reply_markup=home_markup)
 
 
 @dp.message(Command('standings'))
@@ -158,7 +164,7 @@ async def standings_handler(message: Message):
     ans = ans.replace('(', '\\(')
     ans = ans.replace(')', '\\)')
 
-    await message.answer(ans, parse_mode='MarkdownV2')
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
 
 
 @dp.message(Command('teams'))
@@ -177,7 +183,33 @@ async def teams_handler(message: Message):
         )
         i += 1
     
-    await message.answer(ans, parse_mode='MarkdownV2')
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
+
+
+@dp.message(Command('last'))
+async def last_race_handler(message: Message):
+    '''Отправляет результаты последней гонки'''
+
+    last_race = get_last_race()
+    ans = last_race_ans
+    driver = lambda n: drivers_shortname_rus[last_race['races']['results'][n]['driver']['shortName']]
+    race_name = grand_prix_dict[last_race['races']['raceId']]
+
+    winner = '>*1\\.🥇 {}*\n'.format(driver(0))
+    second = '>*2\\.🥈 {}*\n'.format(driver(1))
+    third = '>*3\\.🥉 {}*\n\n'.format(driver(2))
+
+    other = ''
+    for i in range(3, 20):
+        other += '>{}\\. {} {}\n'.format(
+            i + 1,
+            driver(i),
+            '\\(DNF\\)' if last_race['races']['results'][i]['position'] == 'NC' else ''
+        )
+
+    ans += f'*{race_name}*\n\n' + winner + second + third + other
+
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
 
 
 @dp.message()
@@ -194,6 +226,8 @@ async def buttons_handler(message: Message):
         await standings_handler(message)
     elif message.text == teams_button_text:
         await teams_handler(message)
+    elif message.text == last_race_button_text:
+        await last_race_handler(message)
     else:
         await message.answer('Действие не распознано')
 

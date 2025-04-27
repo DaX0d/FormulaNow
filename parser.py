@@ -8,6 +8,7 @@ from settings import grand_prix_locations
 
 
 SCHEDULE_API = 'https://f1api.dev/api/current'
+LAST_RACE_API = 'https://f1api.dev/api/current/last/race'
 DRIVERS_URL = 'https://f-1world.ru/turnirnaja-tablica/9324-formula-1-turnirnaja-tablica-pilotov-sezon-2025-goda.html'
 TEAMS_URL = 'https://f-1world.ru/kubok-konstruktorov/9323-turnirnaja-tablica-kubka-konstruktorov-2025-goda.html'
 
@@ -15,6 +16,7 @@ TEAMS_URL = 'https://f-1world.ru/kubok-konstruktorov/9323-turnirnaja-tablica-kub
 _schedule: list[dict] = []
 _next_track: dict = {}
 _standings: dict = {}
+_last: dict = {}
 
 
 def parse_schedule():
@@ -86,6 +88,19 @@ def parse_teams():
         json.dump(data, file)
 
 
+def parse_last_race():
+    '''Парсит результаты последней гонки и записывает в файл last.json'''
+
+    api = requests.get(LAST_RACE_API)
+
+    try:
+        with open('last.json', 'w', encoding='utf-8') as file:
+            data = json.loads(api.text)
+            json.dump(data, file)
+    except requests.exceptions.ConnectionError:
+        logging.warning('Не удалось установить соединение с API')
+
+
 def parse_all():
     '''Вызывает парсеры расписания, личного зачета и кубка контсрукторов и чистит кеш'''
 
@@ -97,9 +112,11 @@ def parse_all():
         parse_schedule()
         parse_standings()
         parse_teams()
+        parse_last_race()
 
         _schedule = []
         _next_track = {}
+        _last = {}
 
         logging.info('Parsing successfuly complited')
     except:
@@ -187,14 +204,31 @@ def get_next_race() -> dict:
 
 
 def get_standings() -> dict:
+    '''Возвращает словарь с расписанием'''
+
     global _standings
 
     if not _standings:
         with open('standings.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
-        _standings = data
         
+        _standings = data
+
     return _standings
+
+
+def get_last_race() -> dict:
+    '''Возвращает результаты последней гонки'''
+
+    global _last
+
+    if not _last:
+        with open('last.json', 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        
+        _last = data
+
+    return _last
 
 
 if __name__ == '__main__':
