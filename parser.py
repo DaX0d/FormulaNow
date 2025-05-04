@@ -9,6 +9,8 @@ from settings import grand_prix_locations
 
 SCHEDULE_API = 'https://f1api.dev/api/current'
 LAST_RACE_API = 'https://f1api.dev/api/current/last/race'
+LAST_QUALY_API = 'https://f1api.dev/api/current/last/qualy'
+LAST_SPRINT_API = 'https://f1api.dev/api/current/last/sprint/race'
 DRIVERS_URL = 'https://f-1world.ru/turnirnaja-tablica/9324-formula-1-turnirnaja-tablica-pilotov-sezon-2025-goda.html'
 TEAMS_URL = 'https://f-1world.ru/kubok-konstruktorov/9323-turnirnaja-tablica-kubka-konstruktorov-2025-goda.html'
 

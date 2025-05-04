@@ -20,7 +20,11 @@ schedule_button_text = 'Расписание заездов'
 track_button_text = 'Трасса'
 standings_button_text = 'Личный зачет'
 teams_button_text = 'Кубок конструкторов'
-last_race_button_text = 'Результаты'
+results_button_text = 'Результаты последней гонки'
+last_race_button_text = 'Гонка'
+last_qualy_button_text = 'Квалификация'
+last_sprint_button_text = 'Спринт'
+last_sprint_qualy_button_text = 'Спринт квалификация'
 
 # Названия гран при
 grand_prix_locations = [
