@@ -1,3 +1,4 @@
+from os import makedirs
 import requests
 from bs4 import BeautifulSoup
 import json
@@ -109,6 +110,8 @@ def parse_all():
     '''Вызывает парсеры расписания, личного зачета и кубка контсрукторов и чистит кеш'''
 
     global _schedule, _next_track, _standings
+
+    makedirs('data', exist_ok=True)
 
     try:
         logging.info('Start parsing')
