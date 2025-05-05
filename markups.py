@@ -7,7 +7,7 @@ schedule_button = KeyboardButton(text=schedule_button_text)
 track_button = KeyboardButton(text=track_button_text)
 standings_button = KeyboardButton(text=standings_button_text)
 teams_button = KeyboardButton(text=teams_button_text)
-results_button = KeyboardButton(text=last_race_button_text)
+results_button = KeyboardButton(text=results_button_text)
 last_race_button = KeyboardButton(text=last_race_button_text)
 last_qualy_button = KeyboardButton(text=last_qualy_button_text)
 last_sprint_button = KeyboardButton(text=last_sprint_button_text)
@@ -19,7 +19,7 @@ home_layout = [
     [schedule_button],
     [standings_button, next_race_button],
     [teams_button, track_button],
-    # [results_button]
+    [results_button]
 ]
 
 results_layout = [

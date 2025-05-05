@@ -19,7 +19,8 @@ TEAMS_URL = 'https://f-1world.ru/kubok-konstruktorov/9323-turnirnaja-tablica-kub
 _schedule: list[dict] = []
 _next_track: dict = {}
 _standings: dict = {}
-_last: dict = {}
+_last_race: dict = {}
+_last_qualy: dict = {}
 
 
 def parse_schedule():
@@ -95,15 +96,43 @@ def parse_last_race():
     '''Парсит результаты последней гонки и записывает в файл last.json'''
 
     race = requests.get(LAST_RACE_API)
+    qualy = requests.get(LAST_QUALY_API)
 
     if race.status_code == 200:
         try:
+            try:
+                with open('data/last.json', 'r', encoding='utf-8') as file:
+                        data = json.load(file)
+            except FileNotFoundError:
+                data = {}
+            except json.decoder.JSONDecodeError:
+                data = {}
+
+            data['race'] = json.loads(race.text)
+
             with open('data/last.json', 'w', encoding='utf-8') as file:
-                data = json.loads(race.text)
                 json.dump(data, file)
+
         except requests.exceptions.ConnectionError:
             logging.warning('Не удалось установить соединение с API')
-            
+    
+    if qualy.status_code == 200:
+        try:
+            try:
+                with open('data/last.json', 'r', encoding='utf-8') as file:
+                        data = json.load(file)
+            except FileNotFoundError:
+                data = {}
+            except json.decoder.JSONDecodeError:
+                data = {}
+
+            data['qualy'] = json.loads(qualy.text)
+
+            with open('data/last.json', 'w', encoding='utf-8') as file:
+                json.dump(data, file)
+                
+        except requests.exceptions.ConnectionError:
+            logging.warning('Не удалось установить соединение с API')
 
 
 def parse_all():
@@ -123,11 +152,11 @@ def parse_all():
 
         _schedule = []
         _next_track = {}
-        _last = {}
+        _last_race = {}
 
         logging.info('Parsing successfuly complited')
-    except:
-        logging.warning('Парсинг не удался')
+    except Exception as e:
+        logging.warning(f'Парсинг не удался: {e}')
 
 
 def get_schedule() -> list[dict]:
@@ -227,15 +256,29 @@ def get_standings() -> dict:
 def get_last_race() -> dict:
     '''Возвращает результаты последней гонки'''
 
-    global _last
+    global _last_race
 
-    if not _last:
+    if not _last_race:
         with open('data/last.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
         
-        _last = data
+        _last_race = data['race']
 
-    return _last
+    return _last_race
+
+
+def get_last_qualy() -> dict:
+    '''Возвращает результаты последней квалификации'''
+
+    global _last_qualy
+
+    if not _last_qualy:
+        with open('data/last.json', 'r', encoding='utf-8') as file:
+            data = json.load(file)
+        
+        _last_race = data['qualy']
+
+    return _last_race
 
 
 if __name__ == '__main__':

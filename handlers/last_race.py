@@ -4,17 +4,28 @@ from aiogram.filters import Command
 
 from settings import (
     last_race_ans,
+    last_qualy_ans,
+    results_ans,
     drivers_shortname_rus,
     grand_prix_dict
 )
-from parser import get_last_race
-from markups import home_markup
+from parser import get_last_race, get_last_qualy
+from markups import results_markup
 
 
 last_race_router = Router(name='last_race')
 
 
-@last_race_router.message(Command('last'))
+@last_race_router.message(Command('results'))
+async def results_menu_handler(message: Message):
+    '''Выводит клавиатуру с результатами предыдущей гонки'''
+
+    ans = results_ans
+
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=results_markup)
+
+
+@last_race_router.message(Command('race'))
 async def last_race_handler(message: Message):
     '''Отправляет результаты последней гонки'''
 
@@ -37,4 +48,40 @@ async def last_race_handler(message: Message):
 
     ans += f'*{race_name}*\n\n' + winner + second + third + other
 
-    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=results_markup)
+
+
+@last_race_router.message(Command('qualy'))
+async def last_qualy_handler(message: Message):
+    '''Отправляет результаты последней квалификации'''
+
+    last_qauly = get_last_qualy()
+    ans = last_qualy_ans
+    driver = lambda n: drivers_shortname_rus[last_qauly['races']['qualyResults'][n]['driver']['shortName']]
+    race_name = grand_prix_dict[last_qauly['races']['raceId']]
+
+    pole = f'>*1\\. {driver(0)} \\- {last_qauly['races']['qualyResults'][0]['q3'].replace('.', '\\.')}*\n\n'
+
+    grid = ''
+    for i in range(1, 10):
+        grid += '>{}\\. {} \\- {}\n'.format(
+            i + 1,
+            driver(i),
+            last_qauly['races']['qualyResults'][i]['q3'].replace('.', '\\.')
+        )
+    for i in range(10, 15):
+        grid += '>{}\\. {} \\- {}\n'.format(
+            i + 1,
+            driver(i),
+            last_qauly['races']['qualyResults'][i]['q2'].replace('.', '\\.')
+        )
+    for i in range(15, 20):
+        grid += '>{}\\. {} \\- {}\n'.format(
+            i + 1,
+            driver(i),
+            last_qauly['races']['qualyResults'][i]['q1'].replace('.', '\\.')
+        )
+
+    ans += f'*{race_name}*\n\n' + pole + grid
+
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=results_markup)
