@@ -27,7 +27,7 @@ def parse_schedule():
     api = requests.get(SCHEDULE_API)
 
     try:
-        with open('schedule.json', 'w', encoding='utf-8') as file:
+        with open('data/schedule.json', 'w', encoding='utf-8') as file:
             data = json.loads(api.text)
             json.dump(data, file)
     except requests.exceptions.ConnectionError:
@@ -51,7 +51,7 @@ def parse_standings():
         racers[name] = int(points) if points else 0
     
     try:
-        with open('standings.json', 'r', encoding='utf-8') as file:
+        with open('data/standings.json', 'r', encoding='utf-8') as file:
                 data = json.load(file)
     except FileNotFoundError:
         data = {}
@@ -61,7 +61,7 @@ def parse_standings():
     data['racers'] = racers
     _standings['racers'] = racers
 
-    with open('standings.json', 'w', encoding='utf-8') as file:
+    with open('data/standings.json', 'w', encoding='utf-8') as file:
         json.dump(data, file)
 
 
@@ -81,26 +81,28 @@ def parse_teams():
         points = int(row.find_all('td')[4].text)
         teams[name] = points
     
-    with open('standings.json', 'r', encoding='utf-8') as file:
+    with open('data/standings.json', 'r', encoding='utf-8') as file:
         data = json.load(file)
     data['teams'] = teams
     _standings['teams'] = teams
 
-    with open('standings.json', 'w', encoding='utf-8') as file:
+    with open('data/standings.json', 'w', encoding='utf-8') as file:
         json.dump(data, file)
 
 
 def parse_last_race():
     '''Парсит результаты последней гонки и записывает в файл last.json'''
 
-    api = requests.get(LAST_RACE_API)
+    race = requests.get(LAST_RACE_API)
 
-    try:
-        with open('last.json', 'w', encoding='utf-8') as file:
-            data = json.loads(api.text)
-            json.dump(data, file)
-    except requests.exceptions.ConnectionError:
-        logging.warning('Не удалось установить соединение с API')
+    if race.status_code == 200:
+        try:
+            with open('data/last.json', 'w', encoding='utf-8') as file:
+                data = json.loads(race.text)
+                json.dump(data, file)
+        except requests.exceptions.ConnectionError:
+            logging.warning('Не удалось установить соединение с API')
+            
 
 
 def parse_all():
@@ -142,7 +144,7 @@ def get_schedule() -> list[dict]:
     global _schedule
 
     if not _schedule:
-        with open('schedule.json', 'r', encoding='utf-8') as file:
+        with open('data/schedule.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
 
             for race in data['races']:
@@ -178,7 +180,7 @@ def get_next_race() -> dict:
         date = datetime.datetime.now().strftime('%d.%m')
         day, month = map(int, date.split('.'))
 
-        with open('schedule.json', 'r', encoding='utf-8') as file:
+        with open('data/schedule.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
 
             for race in data['races']:
@@ -211,7 +213,7 @@ def get_standings() -> dict:
     global _standings
 
     if not _standings:
-        with open('standings.json', 'r', encoding='utf-8') as file:
+        with open('data/standings.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
         
         _standings = data
@@ -225,7 +227,7 @@ def get_last_race() -> dict:
     global _last
 
     if not _last:
-        with open('last.json', 'r', encoding='utf-8') as file:
+        with open('data/last.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
         
         _last = data

@@ -19,7 +19,7 @@ home_layout = [
     [schedule_button],
     [standings_button, next_race_button],
     [teams_button, track_button],
-    [results_button]
+    # [results_button]
 ]
 
 results_layout = [
