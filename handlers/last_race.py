@@ -63,24 +63,26 @@ async def last_qualy_handler(message: Message):
     pole = f'>*1\\. {driver(0)} \\- {last_qauly['races']['qualyResults'][0]['q3'].replace('.', '\\.')}*\n\n'
 
     grid = ''
-    for i in range(1, 10):
-        grid += '>{}\\. {} \\- {}\n'.format(
-            i + 1,
-            driver(i),
-            last_qauly['races']['qualyResults'][i]['q3'].replace('.', '\\.')
-        )
-    for i in range(10, 15):
-        grid += '>{}\\. {} \\- {}\n'.format(
-            i + 1,
-            driver(i),
-            last_qauly['races']['qualyResults'][i]['q2'].replace('.', '\\.')
-        )
-    for i in range(15, 20):
-        grid += '>{}\\. {} \\- {}\n'.format(
-            i + 1,
-            driver(i),
-            last_qauly['races']['qualyResults'][i]['q1'].replace('.', '\\.')
-        )
+    for i in range(1, 20):
+        try:
+            grid += '>{}\\. {} \\- {}\n'.format(
+                i + 1,
+                driver(i),
+                last_qauly['races']['qualyResults'][i]['q3'].replace('.', '\\.')
+            )
+        except:
+            try:
+                grid += '>{}\\. {} \\- {}\n'.format(
+                    i + 1,
+                    driver(i),
+                    last_qauly['races']['qualyResults'][i]['q2'].replace('.', '\\.')
+                )
+            except:
+                grid += '>{}\\. {} \\- {}\n'.format(
+                    i + 1,
+                    driver(i),
+                    last_qauly['races']['qualyResults'][i]['q1'].replace('.', '\\.')
+                )
 
     ans += f'*{race_name}*\n\n' + pole + grid
 

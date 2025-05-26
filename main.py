@@ -1,6 +1,7 @@
 import os
 import asyncio
 import logging
+import json
 
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
@@ -24,7 +25,18 @@ dp.include_routers(*routers)
 
 @dp.message(Command('start'))
 async def start_handler(message: Message):
-    '''Отправляет приветственное сообщение'''
+    '''Отправляет приветственное сообщение и записывает пользователя в список'''
+
+    with open('users.json', 'r', encoding='utf-8') as file:
+        all_users = json.load(file)
+    
+    user_id = str(message.from_user.id)
+
+    if user_id not in all_users:
+        all_users.append(user_id)
+        with open('users.json', 'w', encoding='utf-8') as file:
+            json.dump(all_users, file)
+
     await message.answer(start_ans, reply_markup=home_markup)
 
 

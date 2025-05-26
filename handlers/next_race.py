@@ -72,4 +72,6 @@ async def track_handler(message: Message):
         next_race['track']['corners']
     )
 
+    ans = ans.replace('-', '\\-')
+
     await message.answer_photo(photo_file, parse_mode='MarkdownV2', caption=ans, reply_markup=home_markup)

@@ -4,6 +4,7 @@ from .last_race import last_race_router
 from .standings import standings_router
 from .buttons import buttons_router
 from .guide import guide_router
+from .admin import admin_router
 
 
 routers = [
@@ -12,5 +13,6 @@ routers = [
     last_race_router,
     standings_router,
     guide_router,
+    admin_router,
     buttons_router  # Этот роутер обязательно последний
 ]
