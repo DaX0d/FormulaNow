@@ -12,6 +12,7 @@ from settings import PARSE_DELAY, start_ans
 from markups import home_markup
 from parser import parse_all
 from handlers import routers
+from notifications import notifier_loop
 
 
 load_dotenv('.env')
@@ -49,9 +50,14 @@ async def periodic_parser():
 
 
 async def main():
-    '''Запускает бота и парсер параллельно'''
+    '''Запускает бота, парсер и рассылку уведомлений параллельно'''
 
+    logging.info('Starting parser')
     asyncio.create_task(periodic_parser())
+
+    logging.info('Starting notifier')
+    asyncio.create_task(notifier_loop(bot))
+
     logging.info('Bot started')
 
     await dp.start_polling(bot)
