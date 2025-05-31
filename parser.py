@@ -4,8 +4,10 @@ from bs4 import BeautifulSoup
 import json
 import datetime
 import logging
+from datetime import timedelta
 
 from settings import grand_prix_locations
+from utils import prev_date
 
 
 SCHEDULE_API = 'https://f1api.dev/api/current'
@@ -209,25 +211,23 @@ def get_next_race() -> dict:
     global _next_track
 
     if not _next_track:
-        date = datetime.datetime.now().strftime('%d.%m')
-        day, month = map(int, date.split('.'))
+        now = datetime.datetime.now(datetime.timezone.utc)
+        utc_offset = timedelta(hours=3)
 
         with open('data/schedule.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
 
             for race in data['races']:
-                race_date = '{}.{}'.format(
-                    race['schedule']['race']['date'][-2:],
-                    race['schedule']['race']['date'][5:7]
-                )
+                race_dt_str = race['schedule']['race']['date'] + 'T' + race['schedule']['race']['time']  # 2025-06-01T13:00:00Z
+                race_dt_utc = datetime.datetime.strptime(race_dt_str, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=datetime.timezone.utc)
 
-                race_day, race_month = map(int, race_date.split('.'))
-                d = race_day - day + 30 * (race_month - month)
+                # Переводим в локальное время (UTC+3)
+                race_dt_local = race_dt_utc + utc_offset
 
-                if d > 0 or d == 0 and int(datetime.time().strftime('%H')) - int(race['schedule']['race']['time'][:2]) > 6:
+                if race_dt_local > now:
                     ret = {
                         'name': grand_prix_locations[race['round'] - 1],
-                        'race_date': race_date,
+                        'race_date': '{}.{}'.format(race['schedule']['race']['date'][-2:], race['schedule']['race']['date'][5:7]),
                         'track': race['circuit'],
                         'schedule': race['schedule'],
                         'gp': race
