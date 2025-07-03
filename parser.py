@@ -156,7 +156,7 @@ def parse_all():
         _next_track = {}
         _last_race = {}
 
-        logging.info('Parsing successfuly complited')
+        # logging.info('Parsing successfuly complited')
     except Exception as e:
         logging.warning(f'Парсинг не удался: {e}')
 
