@@ -102,7 +102,7 @@ def get_schedule() -> list[dict]:
     return d
 
 
-def get_next_race():
+def get_next_race() -> dict:
     '''Возвращает дынные о следующей гонке в виде словаря
 
     Структура словаря

@@ -1,1 +1,1 @@
-from .schedule_test import *
+from .parser import *
