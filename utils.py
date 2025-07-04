@@ -24,3 +24,11 @@ def prev_date(day, month, d) -> tuple[int, int]:
                 return (day - d + 31, new_month)
             case 2:
                 return (day - d + 30, new_month)
+
+
+def try_open(filename: str):
+    try:
+        file = open(filename, 'r', encoding='utf-8')
+    except FileNotFoundError:
+        return False
+    return True
