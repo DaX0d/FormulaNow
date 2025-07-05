@@ -136,5 +136,18 @@ grand_prix_dict = {
     "abu_dhabi_2025": "🇦🇪 Абу\\-Даби"
 }
 
+teams_names_dict = {
+    'mclaren': 'McLaren',
+    'red_bull': 'Red Bull',
+    'ferrari': 'Ferrari',
+    'mercedes': 'Mercedes',
+    'williams': 'Williams',
+    'haas': 'Haas',
+    'rb': 'RB',
+    'aston_martin': 'Aston Martin',
+    'alpine': 'Alpine',
+    'sauber': 'Sauber'
+}
+
 
 PARSE_DELAY = 60

@@ -17,6 +17,8 @@ class ScheduleTestCase(unittest.TestCase):
 
     @unittest.expectedFailure
     def test_parse_last_race(self):
+        if parser.schedule.parse_last_race() == 404:
+            self.skipTest('404')
         self.assertRaises(
             requests.exceptions.ConnectionError,
             parser.schedule.parse_last_race
