@@ -49,7 +49,7 @@ def parse_last_race():
 
         with open('parser/data/last.json', 'w', encoding='utf-8') as file:
             json.dump(data, file)
-    elif json.loads(qualy.text)['status'] == 404:
+    elif json.loads(race.text)['status'] == 404:
         return 404
     else:
         raise exc
