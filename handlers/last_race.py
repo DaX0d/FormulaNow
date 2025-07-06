@@ -9,7 +9,7 @@ from settings import (
     drivers_shortname_rus,
     grand_prix_dict
 )
-from parser import get_last_race, get_last_qualy
+from parser.schedule import get_last_race, get_last_qualy
 from markups import results_markup
 
 

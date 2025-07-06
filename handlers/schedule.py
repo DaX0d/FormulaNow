@@ -6,7 +6,7 @@ from settings import (
     schedule_ans,
     schedule_template
 )
-from parser import get_schedule
+from parser.schedule import get_schedule
 from markups import home_markup
 from utils import msk
 
