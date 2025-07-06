@@ -5,7 +5,7 @@ import asyncio
 
 from aiogram import Bot
 
-from parser import get_next_race
+from parser.schedule import get_next_race
 from utils import msk, prev_date
 from settings import notification_template
 

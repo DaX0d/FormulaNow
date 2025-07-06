@@ -13,7 +13,7 @@ guide_ans = ''
 # Шаблоны 
 schedule_template = '>*{}*  *{}*   *{}*\n>    *Гонка*: {}   Квалификация: {}\n'
 next_race_template = '*{name}*\n>Пятница *{fr_date}*\n>    Практика 1: {fp1_t}\n>    {fp2_n}: {fp2_t}\n\n>Суббота *{sat_date}*\n>    {fp3_n}: {fp3_t}\n>    Квалификация: {q_t}\n\n>Воскресенье *{sun_date}*\n>    *Гонка*: {r_t}'
-standings_template = '>`{:2}\\. {:<27} \\- {:>3}`\n'
+standings_template = '>`{:27} \\- {:>3}`\n'
 teams_template = '>`{:2}\\. {:<14} \\- {:>3}`\n'
 track_template = '*{}*\n\n*Название трассы:* {}\n*Город:* {}\n*Длина круга:* {}\n*Число кругов:* {}\n*Число поворотов:* {}'
 notification_template = '*{} состоится {}*\n{}\nНачало в *{}*\n*Не пропусти\\!*'
@@ -150,4 +150,4 @@ teams_names_dict = {
 }
 
 
-PARSE_DELAY = 60
+PARSE_DELAY = 300

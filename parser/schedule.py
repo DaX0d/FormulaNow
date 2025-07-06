@@ -89,6 +89,8 @@ def get_schedule() -> list[dict]:
     }
     '''
 
+    schedule = []
+
     with open('parser/data/schedule.json', 'r', encoding='utf-8') as file:
         data = json.load(file)
 
@@ -102,8 +104,10 @@ def get_schedule() -> list[dict]:
                 'sq_time': race['schedule']['sprintQualy']['time'],
                 'sprint_time': race['schedule']['sprintRace']['time']
             }
+
+            schedule.append(d)
         
-    return d
+    return schedule
 
 
 def get_next_race() -> dict:

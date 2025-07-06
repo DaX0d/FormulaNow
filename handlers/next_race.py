@@ -10,7 +10,7 @@ from settings import (
     track_ans,
     track_template
 )
-from parser import get_next_race
+from parser.schedule import get_next_race
 from markups import home_markup
 from utils import msk, prev_date
 

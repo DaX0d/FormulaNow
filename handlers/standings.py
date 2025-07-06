@@ -8,7 +8,7 @@ from settings import (
     standings_template,
     teams_template
 )
-from parser import get_standings
+from parser.standings import get_drivers, get_teams
 from markups import home_markup
 
 
@@ -20,21 +20,18 @@ async def standings_handler(message: Message):
     '''Отправляет таблицу личного зачета'''
 
     ans = standings_ans
-    standings = get_standings()
+    standings = get_drivers()
 
     i = 1
-    for name in standings['racers'].keys():
-        ini = name[0]
-        short_name = f'{ini}.{name[name.index(' ') + 1:]}'
+    for name in standings.keys():
         ans += standings_template.format(
-            i,
-            short_name,
-            standings['racers'][name]
+            name,
+            standings[name]
         )
         i += 1
     
-    ans = ans.replace('(', '\\(')
-    ans = ans.replace(')', '\\)')
+    # ans = ans.replace('(', '\\(')
+    # ans = ans.replace(')', '\\)')
 
     await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
 
@@ -44,7 +41,7 @@ async def teams_handler(message: Message):
     '''Отправляет таблицу кубка конструкторов'''
 
     ans = teams_ans
-    teams = get_standings()['teams']
+    teams = get_teams()
 
     i = 1
     for team in teams.keys():
