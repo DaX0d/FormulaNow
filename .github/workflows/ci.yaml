@@ -1,0 +1,15 @@
+on:
+  push:
+    branches:
+    - dev
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test changes
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Instal dependencies
+      run: pip install -r requrements.txt
+    - name: Run tests
+      run: python3 test.py -v
