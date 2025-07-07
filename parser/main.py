@@ -1,3 +1,4 @@
+from os import makedirs
 import requests
 import logging
 
@@ -15,6 +16,8 @@ exc = requests.exceptions.ConnectionError
 
 
 def parse_all():
+    makedirs('parser/data/', exist_ok=True)
+
     try:
         parse_schedule()
     except exc:

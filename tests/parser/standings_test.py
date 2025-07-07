@@ -33,14 +33,20 @@ class StandingsTestCase(unittest.TestCase):
             self.assertTrue('drivers' in json_data.keys())
             self.assertTrue('teams' in json_data.keys())
     
-
+    @unittest.skipUnless(
+        try_open('parser/data/standings.json'),
+        'file does not exist'
+    )
     def test_get_drivers(self):
         drivers = parser.standings.get_drivers()
         self.assertIsInstance(drivers, dict)
         self.assertTrue(len(drivers.keys()) >= 20)
         self.assertTrue(all([len(key.split('(')) == 2 for key in drivers.keys()]))
 
-    
+    @unittest.skipUnless(
+        try_open('parser/data/standings.json'),
+        'file does not exist'
+    )
     def test_get_teams(self):
         teams = parser.standings.get_teams()
         self.assertIsInstance(teams, dict)
