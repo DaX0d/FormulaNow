@@ -3,5 +3,9 @@ import unittest
 from tests import *
 
 
-if __name__ == '__main__':
+def main():
     unittest.main()
+
+
+if __name__ == '__main__':
+    main()

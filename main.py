@@ -55,8 +55,8 @@ async def main():
     logging.info('Starting parser')
     asyncio.create_task(periodic_parser())
 
-    # logging.info('Starting notifier')
-    # asyncio.create_task(notifier_loop(bot))
+    logging.info('Starting notifier')
+    asyncio.create_task(notifier_loop(bot))
 
     logging.info('Bot started')
 
