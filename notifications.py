@@ -30,7 +30,8 @@ class Conditions:
 
         if (now_date == qualy_date
             and (now + datetime.timedelta(hours=1)).timetz() >= qualy_time
-            and not self.qualy_soon):
+            and not self.qualy_soon
+        ):
             return True
         else:
             return False
@@ -44,7 +45,8 @@ class Conditions:
 
         if ((now + datetime.timedelta(days=1)).date() == race_date
             and now_time >= race_time
-            and not self.race_tomorrow):
+            and not self.race_tomorrow
+        ):
             return True
         else:
             return False
@@ -58,18 +60,20 @@ class Conditions:
 
         if (now_date == race_date
             and (now + datetime.timedelta(hours=1)).timetz() >= race_time
-            and not self.race_soon):
+            and not self.race_soon
+        ):
             return True
         else:
             return False
 
-    def drop_flags(self):
-        self.qualy_soon = False
-        self.race_tomorrow = False
-        self.race_soon = False
+    @classmethod
+    def drop_flags(cls):
+        cls.qualy_soon = False
+        cls.race_tomorrow = False
+        cls.race_soon = False
 
 
-async def send_notification(bot: Bot, what, when, name, time):
+async def send_notification(bot: Bot, when, what, name, time):
     '''Присылает уведомления о гонке всем зарегестрированным пользователям'''
 
     with open('users.json', 'r', encoding='utf-8') as file:
@@ -93,7 +97,56 @@ async def send_notification(bot: Bot, what, when, name, time):
 
 async def notifier_loop(bot: Bot):
     '''Проверяет дату и время и вызывает отправление соответствующего уведомления'''
-    pass
+
+    run = True
+    while run:
+        conditions = Conditions()
+        schedule = conditions.next_race['schedule']
+        qualy_time_gen = (int(i) for i in schedule['qualy']['time'][:-1].split(':'))
+        race_time_gen = (int(i) for i in schedule['race']['time'][:-1].split(':'))
+
+        if conditions.is_qualy_soon():
+            await send_notification(
+                bot,
+                'Скоро',
+                'квалификация',
+                conditions.next_race['name'],
+                datetime.time(*qualy_time_gen, tzinfo=MOSCOW_TZ).strftime('%H:%M')
+            )
+
+            Conditions.qualy_soon = True
+        
+        elif conditions.is_race_tomorrow():
+            await send_notification(
+                bot,
+                'Завтра',
+                'гонка',
+                conditions.next_race['name'],
+                datetime.time(*race_time_gen, tzinfo=MOSCOW_TZ).strftime('%H:%M')
+            )
+
+            Conditions.race_tomorrow = True
+
+        elif conditions.is_race_soon():
+            await send_notification(
+                bot,
+                'Скоро',
+                'Гонка',
+                conditions.next_race['name'],
+                datetime.time(*race_time_gen, tzinfo=MOSCOW_TZ).strftime('%H:%M')
+            )
+
+            Conditions.race_soon = True
+        
+        if all(
+            conditions.qualy_soon,
+            conditions.race_tomorrow,
+            conditions.race_soon
+        ):
+            asyncio.sleep(3600)
+            conditions.drop_flags()
+        else:
+            asyncio.sleep(600)
 
 
 if __name__ == '__main__':
