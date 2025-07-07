@@ -35,11 +35,33 @@ class Conditions:
         else:
             return False
     
-    def is_race_tomorrow(self, time: datetime.datetime) -> bool:
-        pass
+    def is_race_tomorrow(self, now = datetime.datetime.now(MOSCOW_TZ)) -> bool:
+        race = self.next_race['schedule']['race']
+        race_date = datetime.date(*(int(i) for i in race['date'].split('-')))
+        race_time = datetime.time(*(int(i) for i in race['time'][:-1].split(':')), tzinfo=MOSCOW_TZ)
+        now_date = now.date()
+        now_time = now.timetz()
 
-    def is_race_soon(self, time: datetime.datetime) -> bool:
-        pass
+        if ((now + datetime.timedelta(days=1)).date() == race_date
+            and now_time >= race_time
+            and not self.race_tomorrow):
+            return True
+        else:
+            return False
+
+    def is_race_soon(self, now = datetime.datetime.now(MOSCOW_TZ)) -> bool:
+        race = self.next_race['schedule']['race']
+        race_date = datetime.date(*(int(i) for i in race['date'].split('-')))
+        race_time = datetime.time(*(int(i) for i in race['time'][:-1].split(':')), tzinfo=MOSCOW_TZ)
+        now_date = now.date()
+        now_time = now.timetz()
+
+        if (now_date == race_date
+            and (now + datetime.timedelta(hours=1)).timetz() >= race_time
+            and not self.race_soon):
+            return True
+        else:
+            return False
 
     def drop_flags(self):
         self.qualy_soon = False
