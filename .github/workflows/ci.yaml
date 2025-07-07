@@ -15,4 +15,4 @@ jobs:
     - name: Run tests
       run: python3 test.py -v
     - name: Run test again
-      run: pyrhon3 test.py -v
+      run: python3 test.py -v
