@@ -1,9 +1,6 @@
 name: Deploy on server
 
 on:
-  push:
-    branches:
-    - dev
   workflow_dispatch:
 
 jobs:
@@ -17,4 +14,4 @@ jobs:
     - name: Login to DH
       run: dokcer login -u dax0d -p ${{ secrets.DH_PASSWORD }}
     - name: Push image to DH
-      run: dokcer push dax0d/formula_now:${{ vars.version }}
+      run: docker push dax0d/formula_now:${{ vars.version }}
