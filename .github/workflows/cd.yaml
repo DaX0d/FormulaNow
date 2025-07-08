@@ -18,5 +18,3 @@ jobs:
       run: dokcer login -u dax0d -p ${{ secrets.DH_PASSWORD }}
     - name: Push image to DH
       run: dokcer push dax0d/formula_now:${{ vars.version }}
-  run-on-server:
-    needs: build

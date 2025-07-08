@@ -13,11 +13,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Cache dependencies
+      id: cache-dependencies
       uses: actions/setup-python@v5
       with:
         python-version: '3.12.3'
         cache: pip
-    - name: Instal dependencies
+    - if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true'}}
+      name: Instal dependencies
       run: pip install -r requirements.txt
     - name: Run tests
       run: python3 test.py -v
