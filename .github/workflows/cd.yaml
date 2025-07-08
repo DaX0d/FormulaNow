@@ -1,6 +1,9 @@
 name: Deploy on server
 
 on:
+  push:
+    branches:
+    - dev
   workflow_dispatch:
 
 jobs:
