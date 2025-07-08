@@ -1,3 +1,5 @@
+name: Deploy on server
+
 on:
   workflow_dispatch:
 
