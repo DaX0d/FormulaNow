@@ -15,6 +15,6 @@ jobs:
     - name: Build image
       run: docker build -t dax0d/formula_now:${{ vars.version }} .
     - name: Login to DH
-      run: dokcer login -u dax0d -p ${{ secrets.DH_PASSWORD }}
+      run: docker login -u dax0d -p ${{ secrets.DH_PASSWORD }}
     - name: Push image to DH
       run: docker push dax0d/formula_now:${{ vars.version }}
