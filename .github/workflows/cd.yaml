@@ -18,3 +18,18 @@ jobs:
       run: docker login -u dax0d -p ${{ secrets.DH_PASSWORD }}
     - name: Push image to DH
       run: docker push dax0d/formula_now:${{ vars.version }}
+  run-on-server:
+    name: Run container on the server
+    runs-on: ubuntu-22.04
+    needs: build
+    steps:
+    - name: Connect to server
+      run: echo ${{ secrets.SERVER_PASSWORD }} | ssh root@${{ secrets.SERVER_IP }}
+    - name: Pull image
+      run: docker pull dax0d/formula_now:${{ vars.version }}
+    - name: Stop current container
+      run: docker stop formula_now
+    - name: Delete current container
+      run: docker rm formula_now
+    - name: Run new contianer
+      run: docker run -d -e TOKEN=${{ secrets.TOKEN }} ADMIN_ID=${{ secrets.ADMIN_ID }} dax0d/formula_now:${{ vars.version }}
