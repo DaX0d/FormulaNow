@@ -143,10 +143,10 @@ async def notifier_loop(bot: Bot):
             conditions.race_tomorrow,
             conditions.race_soon
         ]):
-            asyncio.sleep(3600)
+            await asyncio.sleep(3600)
             conditions.drop_flags()
         else:
-            asyncio.sleep(600)
+            await asyncio.sleep(600)
 
 
 if __name__ == '__main__':
