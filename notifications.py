@@ -138,11 +138,11 @@ async def notifier_loop(bot: Bot):
 
             Conditions.race_soon = True
         
-        if all(
+        if all([
             conditions.qualy_soon,
             conditions.race_tomorrow,
             conditions.race_soon
-        ):
+        ]):
             asyncio.sleep(3600)
             conditions.drop_flags()
         else:

@@ -33,4 +33,4 @@ jobs:
           docker pull dax0d/formula_now:${{ vars.version }}
           docker stop formula_now
           docker rm formula_now
-          docker run -d -e TOKEN=${{ secrets.TOKEN }} -e ADMIN_ID=${{ secrets.ADMIN_ID }} dax0d/formula_now:${{ vars.version }}
+          docker run -d -e TOKEN=${{ secrets.TOKEN }} -e ADMIN_ID=${{ secrets.ADMIN_ID }} --name formula_now dax0d/formula_now:${{ vars.version }}
