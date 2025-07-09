@@ -15,7 +15,7 @@ jobs:
     - name: Dowload static and users
       run: |
         curl -L "https://drive.usercontent.google.com/u/0/uc?id=1R1iwDrlHSQfSt3tAQ8lh5SOOWmaq7YWz&export=download" -o static.zip
-        unzip static.zip -d static/
+        unzip static.zip -d ./
         rm static.zip
     - name: Build image
       run: docker build -t dax0d/formula_now:${{ vars.version }} .
