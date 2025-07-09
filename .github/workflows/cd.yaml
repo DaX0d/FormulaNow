@@ -23,19 +23,14 @@ jobs:
     runs-on: ubuntu-22.04
     needs: build
     steps:
-    - name: Setup SSH key
-      run: |
-        mkdir ~/.ssh
-        echo ${{ secrets.SSH_PRIVATE_KEY }} > ~/.ssh/id_ed25519
-        chmod 600 ~/.ssh/id_ed25519
-        ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
     - name: Connect to server
-      run: ssh -i ~/.ssh/id_ed25519 root@${{ secrets.SERVER_IP }}
-    - name: Pull image
-      run: docker pull dax0d/formula_now:${{ vars.version }}
-    - name: Stop current container
-      run: docker stop formula_now
-    - name: Delete current container
-      run: docker rm formula_now
-    - name: Run new contianer
-      run: docker run -d -e TOKEN=${{ secrets.TOKEN }} ADMIN_ID=${{ secrets.ADMIN_ID }} dax0d/formula_now:${{ vars.version }}
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: root
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          docker pull dax0d/formula_now:${{ vars.version }}
+          docker stop formula_now
+          docker rm formula_now
+          docker run -d -e TOKEN=${{ secrets.TOKEN }} ADMIN_ID=${{ secrets.ADMIN_ID }} dax0d/formula_now:${{ vars.version }}
