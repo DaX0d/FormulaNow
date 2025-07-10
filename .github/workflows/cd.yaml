@@ -17,7 +17,9 @@ jobs:
         curl -L "https://drive.usercontent.google.com/u/0/uc?id=1R1iwDrlHSQfSt3tAQ8lh5SOOWmaq7YWz&export=download" -o static.zip
         unzip static.zip -d ./
         rm static.zip
-        curl -L "https://drive.google.com/uc?export=download&id${{ secrets.USERS_FILE_ID }}" -o users.json
+        curl -L "https://drive.google.com/uc?export=download&id$USERS_FILE_ID" -o users.json
+      env:
+        USERS_FILE_ID: ${{ secrets.USERS_FILE_ID}}
     - name: Build image
       run: docker build -t dax0d/formula_now:${{ vars.version }} .
     - name: Login to DH
