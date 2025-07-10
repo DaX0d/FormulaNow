@@ -38,7 +38,7 @@ def try_open(filename: str):
     return True
 
 
-def wrtite_to_json_from_page(page: requests.Response, filename: str, key: str):
+def write_to_json_from_page(page: requests.Response, filename: str, key: str):
     '''Проверяет статус страницы, если 200, то записывает в файл под введенным ключем, если 404, возвращает 404, иначе - ошибка'''
 
     exc = requests.exceptions.ConnectionError(f'unable to parse {key}')
@@ -46,7 +46,7 @@ def wrtite_to_json_from_page(page: requests.Response, filename: str, key: str):
     if page.status_code == 200 and len(page.text.split(',')) > 10:
         try:
             with open(filename, 'r', encoding='utf-8') as file:
-                    data = json.load(file)
+                data = json.load(file)
         except FileNotFoundError:
             data = {}
         except json.decoder.JSONDecodeError:

@@ -3,12 +3,14 @@ import json
 import datetime
 
 from settings import grand_prix_locations
+from utils import write_to_json_from_page
 
 
 SCHEDULE_API = 'https://f1api.dev/api/current'
 LAST_RACE_API = 'https://f1api.dev/api/current/last/race'
 LAST_QUALY_API = 'https://f1api.dev/api/current/last/qualy'
 LAST_SPRINT_API = 'https://f1api.dev/api/current/last/sprint/race'
+LAST_SPRINT_QUALY_API = 'https://f1api.dev/api/current/last/sprint/qualy'
 
 
 # Парсеры
@@ -31,46 +33,29 @@ def parse_schedule():
 def parse_last_race():
     '''Парсит результаты последней гонки и записывает в файл last.json'''
 
-    exc = requests.exceptions.ConnectionError
-
     race = requests.get(LAST_RACE_API)
+    write_to_json_from_page(race, 'parser/data/last.json', 'race')
+
+
+def parse_last_qualy():
+    '''Парсит результаты последней квалификации и записывает в файл last.json'''
+
     qualy = requests.get(LAST_QUALY_API)
+    write_to_json_from_page(qualy, 'parser/data/last.json', 'qualy')
 
-    if race.status_code == 200 and len(race.text.split(',')) > 10:
-        try:
-            with open('parser/data/last.json', 'r', encoding='utf-8') as file:
-                    data = json.load(file)
-        except FileNotFoundError:
-            data = {}
-        except json.decoder.JSONDecodeError:
-            data = {}
 
-        data['race'] = json.loads(race.text)
+def parse_last_sprint():
+    '''Парсит результаты последнего спринта и записавает в файл last.json'''
 
-        with open('parser/data/last.json', 'w', encoding='utf-8') as file:
-            json.dump(data, file)
-    elif json.loads(race.text)['status'] == 404:
-        return 404
-    else:
-        raise exc
-    
-    if qualy.status_code == 200 and len(qualy.text.split(',')) > 10:
-        try:
-            with open('parser/data/last.json', 'r', encoding='utf-8') as file:
-                    data = json.load(file)
-        except FileNotFoundError:
-            data = {}
-        except json.decoder.JSONDecodeError:
-            data = {}
+    sprint = requests.get(LAST_SPRINT_API)
+    write_to_json_from_page(sprint, 'parser/data/last.json', 'sprint')
 
-        data['qualy'] = json.loads(qualy.text)
 
-        with open('parser/data/last.json', 'w', encoding='utf-8') as file:
-            json.dump(data, file)
-    elif json.loads(qualy.text)['status'] == 404:
-        return 404
-    else:
-        raise exc
+def parse_last_sprint_qualy():
+    '''Парсит результаты последней спринт квалификации и записывает в файл last.json'''
+
+    s_qualy = requests.get(LAST_SPRINT_QUALY_API)
+    write_to_json_from_page(s_qualy, 'parser/data/last.json', 's_qualy')
 
 
 # Геттеры
