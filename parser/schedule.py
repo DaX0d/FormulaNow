@@ -152,5 +152,23 @@ def get_last_qualy() -> dict:
     return data['qualy']
 
 
+def get_last_sprint() -> dict:
+    '''Возвращает результаты последнего спринта'''
+
+    with open('parser/data/last.json', 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    
+    return data['sprint']
+
+
+def get_last_sprint_qualy() -> dict:
+    '''Возвращает разультаты последней спринт квалификации'''
+
+    with open('parser/data/last.json', 'r', encoding='utf-8') as file:
+        data = json.load(file)
+
+    return data['s_qualy']
+
+
 if __name__ == '__main__':
     parse_last_race()
