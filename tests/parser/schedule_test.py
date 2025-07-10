@@ -119,8 +119,9 @@ class ScheduleTestCase(unittest.TestCase):
         'file does not exist'
     )
     def test_last_sprint(self):
-        if 'sprint' in json.load(open('parser/data/last.json', 'r', encoding='utf-8')).keys():
-            self.skipTest('no sprint')
+        with open('parser/data/last.json', 'r', encoding='utf-8') as file:
+            if 'sprint' not in json.load(file).keys():
+                self.skipTest('no sprint')
         sprint = parser.schedule.get_last_sprint()
         self.assertIsInstance(sprint, dict)
         self.assertEqual(len(sprint['sprintRaceResults']), 20)
@@ -131,8 +132,9 @@ class ScheduleTestCase(unittest.TestCase):
         'file does not exist'
     )
     def test_last_sprint_qualy(self):
-        if 's_qualy' in json.load(open('parser/data/last.json', 'r', encoding='utf-8')).keys():
-            self.skipTest('no sprint')
+        with open('parser/data/last.json', 'r', encoding='utf-8') as file:
+            if 's_qualy' not in json.load(file).keys():
+                self.skipTest('no sprint')
         sprint = parser.schedule.get_last_sprint_qualy()
         self.assertIsInstance(sprint, dict)
         self.assertEqual(len(sprint['sprintQualyResults']), 20)
