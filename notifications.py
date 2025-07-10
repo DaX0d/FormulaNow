@@ -127,7 +127,7 @@ async def notifier_loop(bot: Bot):
 
             Conditions.race_tomorrow = True
 
-        elif conditions.is_race_soon():
+        elif conditions.is_race_soon() and conditions.race_tomorrow:
             await send_notification(
                 bot,
                 'Скоро',
