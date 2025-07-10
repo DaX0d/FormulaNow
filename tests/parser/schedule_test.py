@@ -112,3 +112,27 @@ class ScheduleTestCase(unittest.TestCase):
         last_qualy = parser.schedule.get_last_qualy()
         self.assertIsInstance(last_qualy, dict)
         self.assertEqual(len(last_qualy['races']['qualyResults']), 20)
+
+
+    @unittest.skipUnless(
+        try_open('parser/data/last.json'),
+        'file does not exist'
+    )
+    def test_last_sprint(self):
+        if 'sprint' in json.load(open('parser/data/last.json', 'r', encoding='utf-8')).keys():
+            self.skipTest('no sprint')
+        sprint = parser.schedule.get_last_sprint()
+        self.assertIsInstance(sprint, dict)
+        self.assertEqual(len(sprint['sprintRaceResults']), 20)
+
+
+    @unittest.skipUnless(
+        try_open('parser/data/last.json'),
+        'file does not exist'
+    )
+    def test_last_sprint_qualy(self):
+        if 's_qualy' in json.load(open('parser/data/last.json', 'r', encoding='utf-8')).keys():
+            self.skipTest('no sprint')
+        sprint = parser.schedule.get_last_sprint_qualy()
+        self.assertIsInstance(sprint, dict)
+        self.assertEqual(len(sprint['sprintQualyResults']), 20)
