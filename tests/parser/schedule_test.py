@@ -23,6 +23,36 @@ class ScheduleTestCase(unittest.TestCase):
             requests.exceptions.ConnectionError,
             parser.schedule.parse_last_race
         )
+    
+
+    @unittest.expectedFailure
+    def test_pasre_last_qualy(self):
+        if parser.schedule.parse_last_qualy() == 404:
+            self.skipTest('404')
+        self.assertRaises(
+            requests.exceptions.ConnectionError,
+            parser.schedule.parse_last_qualy
+        )
+
+
+    @unittest.expectedFailure
+    def test_parse_last_sprint(self):
+        if parser.schedule.parse_last_sprint() == 404:
+            self.skipTest('404')
+        self.assertRaises(
+            requests.exceptions.ConnectionError,
+            parser.schedule.parse_last_sprint
+        )
+
+    
+    @unittest.expectedFailure
+    def test_parse_last_sprint_qualy(self):
+        if parser.schedule.parse_last_sprint_qualy() == 404:
+            self.skipTest('404')
+        self.assertRaises(
+            requests.exceptions.ConnectionError,
+            parser.schedule.parse_last_sprint_qualy
+        )
 
 
     @unittest.skipUnless(
