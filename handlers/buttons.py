@@ -9,12 +9,14 @@ from settings import (
     teams_button_text,
     results_button_text,
     last_race_button_text,
-    last_qualy_button_text
+    last_qualy_button_text,
+    last_sprint_button_text
 )
 
 from .last_race import (
     last_race_handler,
     last_qualy_handler,
+    last_sprint_handler,
     results_menu_handler
 )
 from .next_race import next_race_handler, track_handler
@@ -28,7 +30,7 @@ buttons_router = Router(name='buttons')
 
 @buttons_router.message()
 async def buttons_handler(message: Message):
-    '''Вызывает хендлер, соответствующий нажатой кновке'''
+    '''Вызывает хендлер, соответствующий нажатой кнопке'''
 
     if message.text == next_race_button_text:
         await next_race_handler(message)
@@ -46,6 +48,8 @@ async def buttons_handler(message: Message):
         await last_race_handler(message)
     elif message.text == last_qualy_button_text:
         await last_qualy_handler(message)
+    elif message.text == last_sprint_button_text:
+        await last_sprint_handler(message)
     elif message.text == 'Назад':
         await message.answer('Главное меню', reply_markup=home_markup)
     else:
