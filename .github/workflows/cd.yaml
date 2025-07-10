@@ -1,0 +1,41 @@
+name: Deploy on server
+
+on:
+  workflow_dispatch
+
+jobs:
+  build:
+    name: Build bot image
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4
+    - name: Dowload static and users
+      run: |
+        curl -L "https://drive.usercontent.google.com/u/0/uc?id=1R1iwDrlHSQfSt3tAQ8lh5SOOWmaq7YWz&export=download" -o static.zip
+        unzip static.zip -d ./
+        rm static.zip
+        curl -L "https://drive.google.com/uc?export=download&id=$USERS_FILE_ID" -o users.json
+      env:
+        USERS_FILE_ID: ${{ secrets.USERS_FILE_ID}}
+    - name: Build image
+      run: docker build -t dax0d/formula_now:${{ vars.version }} .
+    - name: Login to DH
+      run: docker login -u dax0d -p ${{ secrets.DH_PASSWORD }}
+    - name: Push image to DH
+      run: docker push dax0d/formula_now:${{ vars.version }}
+  run-on-server:
+    name: Run container on the server
+    runs-on: ubuntu-22.04
+    needs: build
+    steps:
+    - name: Connect to server
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: root
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          docker pull dax0d/formula_now:${{ vars.version }}
+          docker stop formula_now
+          docker rm formula_now
+          docker run -d -e TOKEN=${{ secrets.TOKEN }} -e ADMIN_ID=${{ secrets.ADMIN_ID }} --name formula_now dax0d/formula_now:${{ vars.version }}

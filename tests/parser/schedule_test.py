@@ -42,12 +42,12 @@ class ScheduleTestCase(unittest.TestCase):
     )
     def test_get_schedule(self):
         schedule = parser.schedule.get_schedule()
-        self.assertIsInstance(schedule, dict)
-        self.assertIsInstance(schedule['id'], int)
-        self.assertIsInstance(schedule['name'], str)
-        self.assertIsInstance(schedule['date'], str)
-        self.assertIsInstance(schedule['race_time'], str)
-        self.assertIsInstance(schedule['q_time'], str)
+        self.assertIsInstance(schedule, list)
+        self.assertIsInstance(schedule[0]['id'], int)
+        self.assertIsInstance(schedule[0]['name'], str)
+        self.assertIsInstance(schedule[0]['date'], str)
+        self.assertIsInstance(schedule[0]['race_time'], str)
+        self.assertIsInstance(schedule[0]['q_time'], str)
 
 
     @unittest.skipUnless(
