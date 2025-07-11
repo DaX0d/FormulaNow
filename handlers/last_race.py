@@ -125,3 +125,36 @@ async def last_sprint_handler(message: Message):
 @last_race_router.message(Command('s_qualy'))
 async def last_sprint_qualy_handler(message: Message):
     '''Отправляет результаты последней спринт квалификации'''
+
+    last_sprint_qualy = get_last_sprint_qualy()
+    ans = last_sprint_qualy_ans
+    driver = lambda n: drivers_shortname_rus[last_sprint_qualy['races']['sprintQualyResults'][n]['driver']['shortName']]
+    race_name = grand_prix_dict[last_sprint_qualy['races']['raceId']]
+
+    pole = f'>*1\\. {driver(0)} \\- {last_sprint_qualy['races']['qualyResults'][0]['q3'].replace('.', '\\.')}*\n\n'
+
+    grid = ''
+    for i in range(1, 20):
+        try:
+            grid += '>{}\\. {} \\- {}\n'.format(
+                i + 1,
+                driver(i),
+                last_sprint_qualy['races']['qualyResults'][i]['q3'].replace('.', '\\.')
+            )
+        except:
+            try:
+                grid += '>{}\\. {} \\- {}\n'.format(
+                    i + 1,
+                    driver(i),
+                    last_sprint_qualy['races']['qualyResults'][i]['q2'].replace('.', '\\.')
+                )
+            except:
+                grid += '>{}\\. {} \\- {}\n'.format(
+                    i + 1,
+                    driver(i),
+                    last_sprint_qualy['races']['qualyResults'][i]['q1'].replace('.', '\\.')
+                )
+
+    ans += f'*{race_name}*\n\n' + pole + grid
+
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=results_with_sprint_markup)
