@@ -13,7 +13,6 @@ from settings import (
     last_sprint_button_text,
     last_sprint_qualy_button_text
 )
-
 from .last_race import (
     last_race_handler,
     last_qualy_handler,
@@ -29,31 +28,26 @@ from markups import home_markup
 
 buttons_router = Router(name='buttons')
 
+buttons_dict = {
+    next_race_button_text: next_race_handler,
+    schedule_button_text: schedule_handler,
+    track_button_text: track_handler,
+    standings_button_text: standings_handler,
+    teams_button_text: teams_handler,
+    results_button_text: results_menu_handler,
+    last_race_button_text: last_race_handler,
+    last_qualy_button_text: last_qualy_handler,
+    last_sprint_button_text: last_sprint_handler,
+    last_sprint_qualy_button_text: last_sprint_qualy_handler
+}
+
 
 @buttons_router.message()
 async def buttons_handler(message: Message):
     '''Вызывает хендлер, соответствующий нажатой кнопке'''
 
-    if message.text == next_race_button_text:
-        await next_race_handler(message)
-    elif message.text == schedule_button_text:
-        await schedule_handler(message)
-    elif message.text == track_button_text:
-        await track_handler(message)
-    elif message.text == standings_button_text:
-        await standings_handler(message)
-    elif message.text == teams_button_text:
-        await teams_handler(message)
-    elif message.text == results_button_text:
-        await results_menu_handler(message)
-    elif message.text == last_race_button_text:
-        await last_race_handler(message)
-    elif message.text == last_qualy_button_text:
-        await last_qualy_handler(message)
-    elif message.text == last_sprint_button_text:
-        await last_sprint_handler(message)
-    elif message.text == last_sprint_qualy_button_text:
-        await last_sprint_qualy_handler(message)
+    if message.text in buttons_dict.keys():
+        await buttons_dict[message.text](message)
     elif message.text == 'Назад':
         await message.answer('Главное меню', reply_markup=home_markup)
     else:
