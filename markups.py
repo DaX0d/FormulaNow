@@ -1,5 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+
 from settings import *
+from parser.schedule import parse_last_sprint_qualy
 
 
 next_race_button = KeyboardButton(text=next_race_button_text)
@@ -38,3 +40,10 @@ results_with_sprint_layout = [
 home_markup = ReplyKeyboardMarkup(keyboard=home_layout)
 results_markup = ReplyKeyboardMarkup(keyboard=results_layout)
 results_with_sprint_markup = ReplyKeyboardMarkup(keyboard=results_with_sprint_layout)
+
+def get_results_markup() -> ReplyKeyboardMarkup:
+    '''Возвращает маркап результатов последней гонки в зависимости от того, был ли спринт'''
+
+    if parse_last_sprint_qualy() != 404:
+        return results_with_sprint_markup
+    return results_markup

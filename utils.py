@@ -1,3 +1,7 @@
+import requests
+import json
+
+
 def msk(t: str) -> str:
     '''Принимает время по гринвичу, возвращает по московскому времени'''
     h = (int(t[:2].lstrip('0') or '0') + 3) % 24
@@ -32,3 +36,27 @@ def try_open(filename: str):
     except FileNotFoundError:
         return False
     return True
+
+
+def write_to_json_from_page(page: requests.Response, filename: str, key: str):
+    '''Проверяет статус страницы, если 200, то записывает в файл под введенным ключем, если 404, возвращает 404, иначе - ошибка'''
+
+    exc = requests.exceptions.ConnectionError(f'unable to parse {key}')
+
+    if page.status_code == 200 and len(page.text.split(',')) > 10:
+        try:
+            with open(filename, 'r', encoding='utf-8') as file:
+                data = json.load(file)
+        except FileNotFoundError:
+            data = {}
+        except json.decoder.JSONDecodeError:
+            data = {}
+
+        data[key] = json.loads(page.text)
+
+        with open(filename, 'w', encoding='utf-8') as file:
+            json.dump(data, file)
+    elif json.loads(page.text)['status'] == 404:
+        return 404
+    else:
+        raise exc

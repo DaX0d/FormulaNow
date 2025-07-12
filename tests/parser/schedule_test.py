@@ -23,6 +23,36 @@ class ScheduleTestCase(unittest.TestCase):
             requests.exceptions.ConnectionError,
             parser.schedule.parse_last_race
         )
+    
+
+    @unittest.expectedFailure
+    def test_pasre_last_qualy(self):
+        if parser.schedule.parse_last_qualy() == 404:
+            self.skipTest('404')
+        self.assertRaises(
+            requests.exceptions.ConnectionError,
+            parser.schedule.parse_last_qualy
+        )
+
+
+    @unittest.expectedFailure
+    def test_parse_last_sprint(self):
+        if parser.schedule.parse_last_sprint() == 404:
+            self.skipTest('404')
+        self.assertRaises(
+            requests.exceptions.ConnectionError,
+            parser.schedule.parse_last_sprint
+        )
+
+    
+    @unittest.expectedFailure
+    def test_parse_last_sprint_qualy(self):
+        if parser.schedule.parse_last_sprint_qualy() == 404:
+            self.skipTest('404')
+        self.assertRaises(
+            requests.exceptions.ConnectionError,
+            parser.schedule.parse_last_sprint_qualy
+        )
 
 
     @unittest.skipUnless(
@@ -82,3 +112,29 @@ class ScheduleTestCase(unittest.TestCase):
         last_qualy = parser.schedule.get_last_qualy()
         self.assertIsInstance(last_qualy, dict)
         self.assertEqual(len(last_qualy['races']['qualyResults']), 20)
+
+
+    @unittest.skipUnless(
+        try_open('parser/data/last.json'),
+        'file does not exist'
+    )
+    def test_last_sprint(self):
+        with open('parser/data/last.json', 'r', encoding='utf-8') as file:
+            if 'sprint' not in json.load(file).keys():
+                self.skipTest('no sprint')
+        sprint = parser.schedule.get_last_sprint()
+        self.assertIsInstance(sprint, dict)
+        self.assertEqual(len(sprint['sprintRaceResults']), 20)
+
+
+    @unittest.skipUnless(
+        try_open('parser/data/last.json'),
+        'file does not exist'
+    )
+    def test_last_sprint_qualy(self):
+        with open('parser/data/last.json', 'r', encoding='utf-8') as file:
+            if 's_qualy' not in json.load(file).keys():
+                self.skipTest('no sprint')
+        sprint = parser.schedule.get_last_sprint_qualy()
+        self.assertIsInstance(sprint, dict)
+        self.assertEqual(len(sprint['sprintQualyResults']), 20)
