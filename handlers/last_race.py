@@ -17,7 +17,7 @@ from parser.schedule import (
     get_last_sprint,
     get_last_sprint_qualy
 )
-from markups import results_markup, results_with_sprint_markup
+from markups import get_results_markup
 
 
 last_race_router = Router(name='last_race')
@@ -29,7 +29,7 @@ async def results_menu_handler(message: Message):
 
     ans = results_ans
 
-    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=results_markup)
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=get_results_markup())
 
 
 @last_race_router.message(Command('race'))
@@ -55,7 +55,7 @@ async def last_race_handler(message: Message):
 
     ans += f'*{race_name}*\n\n' + winner + second + third + other
 
-    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=results_markup)
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=get_results_markup())
 
 
 @last_race_router.message(Command('qualy'))
@@ -93,7 +93,7 @@ async def last_qualy_handler(message: Message):
 
     ans += f'*{race_name}*\n\n' + pole + grid
 
-    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=results_markup)
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=get_results_markup())
 
 
 @last_race_router.message(Command('sprint'))
@@ -119,7 +119,7 @@ async def last_sprint_handler(message: Message):
 
     ans += f'*{race_name}*\n\n' + winner + second + third + other
 
-    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=results_with_sprint_markup)
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=get_results_markup())
 
 
 @last_race_router.message(Command('s_qualy'))
@@ -157,4 +157,4 @@ async def last_sprint_qualy_handler(message: Message):
 
     ans += f'*{race_name}*\n\n' + pole + grid
 
-    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=results_with_sprint_markup)
+    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=get_results_markup())
