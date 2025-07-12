@@ -34,28 +34,28 @@ def parse_last_race():
     '''Парсит результаты последней гонки и записывает в файл last.json'''
 
     race = requests.get(LAST_RACE_API)
-    write_to_json_from_page(race, 'parser/data/last.json', 'race')
+    return write_to_json_from_page(race, 'parser/data/last.json', 'race')
 
 
 def parse_last_qualy():
     '''Парсит результаты последней квалификации и записывает в файл last.json'''
 
     qualy = requests.get(LAST_QUALY_API)
-    write_to_json_from_page(qualy, 'parser/data/last.json', 'qualy')
+    return write_to_json_from_page(qualy, 'parser/data/last.json', 'qualy')
 
 
 def parse_last_sprint():
     '''Парсит результаты последнего спринта и записавает в файл last.json'''
 
     sprint = requests.get(LAST_SPRINT_API)
-    write_to_json_from_page(sprint, 'parser/data/last.json', 'sprint')
+    return write_to_json_from_page(sprint, 'parser/data/last.json', 'sprint')
 
 
 def parse_last_sprint_qualy():
     '''Парсит результаты последней спринт квалификации и записывает в файл last.json'''
 
     s_qualy = requests.get(LAST_SPRINT_QUALY_API)
-    write_to_json_from_page(s_qualy, 'parser/data/last.json', 's_qualy')
+    return write_to_json_from_page(s_qualy, 'parser/data/last.json', 's_qualy')
 
 
 # Геттеры
