@@ -1,3 +1,4 @@
+import os
 import requests
 import json
 
@@ -60,3 +61,10 @@ def write_to_json_from_page(page: requests.Response, filename: str, key: str):
         return 404
     else:
         raise exc
+
+def remove_parser_files():
+    '''Удаляет дата-файлы из парсера'''
+
+    os.remove('parser/data/last.json')
+    os.remove('parser/data/schedule.json')
+    os.remove('parser/data/standings.json')

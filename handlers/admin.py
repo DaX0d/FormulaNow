@@ -7,7 +7,9 @@ from aiogram import Router
 from aiogram.types import Message, FSInputFile
 from aiogram.filters import Command
 
-from markups import admin_markup
+from parser import parse_all
+from markups import admin_markup, home_markup
+from utils import remove_parser_files
 
 
 load_dotenv()
@@ -29,7 +31,7 @@ async def admin_menu_handler(message: Message):
     if user_is_admin(message):
         await message.answer('Админское меню', reply_markup=admin_markup)
     else:
-        await message.answer('Ты не админ!')
+        await message.answer('Ты не админ!', reply_markup=home_markup)
 
 
 @admin_router.message(Command('list_of_users'))
@@ -40,7 +42,7 @@ async def list_of_users_handler(message: Message):
         users_file = FSInputFile('users.json', filename='users.json')
         await message.answer_document(users_file, reply_markup=admin_markup)
     else:
-        await message.answer('Ты не админ!')
+        await message.answer('Ты не админ!', reply_markup=home_markup)
 
 
 @admin_router.message(Command('number_of_users'))
@@ -52,7 +54,7 @@ async def number_of_users_handler(message: Message):
             users_list = json.load(file)
         await message.answer(f'{len(users_list)}', reply_markup=admin_markup)
     else:
-        await message.answer('Ты не админ!')
+        await message.answer('Ты не админ!', reply_markup=home_markup)
 
 
 @admin_router.message(Command('parser_data'))
@@ -68,4 +70,16 @@ async def parser_data_handler(message: Message):
         await message.answer_document(schedule)
         await message.answer_document(standings, reply_markup=admin_markup)
     else:
-        await message.answer('Ты не админ!')
+        await message.answer('Ты не админ!', reply_markup=home_markup)
+
+
+@admin_router.message(Command('reload_parser'))
+async def reload_parser_handler(message: Message):
+    '''Перезагружает парсер'''
+
+    if user_is_admin(message):
+        remove_parser_files()
+        parse_all()
+        await message.answer('Парсер перезапущен', reply_markup=admin_markup)
+    else:
+        await message.answer('Ты не админ!', reply_markup=home_markup)
