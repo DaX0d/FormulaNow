@@ -1,4 +1,5 @@
 import os
+import json
 
 from dotenv import load_dotenv
 
@@ -38,5 +39,17 @@ async def list_of_users_handler(message: Message):
     if user_is_admin(message):
         users_file = FSInputFile('users.json', filename='users.json')
         await message.answer_document(users_file, reply_markup=admin_markup)
+    else:
+        await message.answer('Ты не админ!')
+
+
+@admin_router.message(Command('number_of_users'))
+async def number_of_users_handler(message: Message):
+    '''Выаодит число зарегестрированных пользователей'''
+
+    if user_is_admin(message):
+        with open('users.json', 'r', encoding='utf-8') as file:
+            users_list = json.load(file)
+        await message.answer(f'{len(users_list)}', reply_markup=admin_markup)
     else:
         await message.answer('Ты не админ!')
