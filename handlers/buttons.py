@@ -11,7 +11,12 @@ from settings import (
     last_race_button_text,
     last_qualy_button_text,
     last_sprint_button_text,
-    last_sprint_qualy_button_text
+    last_sprint_qualy_button_text,
+    list_of_users_button_text,
+    number_of_users_button_text,
+    parser_data_button_text,
+    parser_reload_button_text,
+    notifications_reload_button_text
 )
 from .last_race import (
     last_race_handler,
@@ -23,6 +28,13 @@ from .last_race import (
 from .next_race import next_race_handler, track_handler
 from .schedule import schedule_handler
 from .standings import standings_handler, teams_handler
+from .admin import (
+    list_of_users_handler,
+    number_of_users_handler,
+    parser_data_handler,
+    reload_parser_handler,
+    reload_notifications_handler
+)
 from markups import home_markup
 
 
@@ -38,7 +50,12 @@ buttons_dict = {
     last_race_button_text: last_race_handler,
     last_qualy_button_text: last_qualy_handler,
     last_sprint_button_text: last_sprint_handler,
-    last_sprint_qualy_button_text: last_sprint_qualy_handler
+    last_sprint_qualy_button_text: last_sprint_qualy_handler,
+    list_of_users_button_text: list_of_users_handler,
+    number_of_users_button_text: number_of_users_handler,
+    parser_data_button_text: parser_data_handler,
+    parser_reload_button_text: reload_parser_handler,
+    notifications_reload_button_text: reload_notifications_handler
 }
 
 

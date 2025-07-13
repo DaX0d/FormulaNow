@@ -31,6 +31,11 @@ last_race_button_text = 'Гонка'
 last_qualy_button_text = 'Квалификация'
 last_sprint_button_text = 'Спринт'
 last_sprint_qualy_button_text = 'Спринт квалификация'
+list_of_users_button_text = 'Список пользователей'
+number_of_users_button_text = 'Количество пользователей'
+parser_data_button_text = 'Данные парсера'
+parser_reload_button_text = 'Перезапуск парсера'
+notifications_reload_button_text = 'Перезапуск уведомлений'
 
 # Названия гран при
 grand_prix_locations = [

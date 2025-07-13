@@ -1,5 +1,28 @@
+import os
+import asyncio
 import requests
 import json
+
+
+class ParallelTask:
+    '''Параллельно работающая задача'''
+
+    def __init__(self, asnc_fncn, *, prms: list = []):
+        self.function = asnc_fncn
+        self.parametrs = prms
+    
+    def run(self):
+        if not self.parametrs:
+            self.task = asyncio.create_task(self.function())
+        else:
+            self.task = asyncio.create_task(self.function(*self.parametrs))
+    
+    def kill(self):
+        self.task.cancel('killed')
+    
+    def reload(self):
+        self.kill()
+        self.run()
 
 
 def msk(t: str) -> str:
@@ -60,3 +83,10 @@ def write_to_json_from_page(page: requests.Response, filename: str, key: str):
         return 404
     else:
         raise exc
+
+def remove_parser_files():
+    '''Удаляет дата-файлы из парсера'''
+
+    os.remove('parser/data/last.json')
+    os.remove('parser/data/schedule.json')
+    os.remove('parser/data/standings.json')

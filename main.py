@@ -10,9 +10,9 @@ from aiogram.filters import Command
 
 from settings import PARSE_DELAY, start_ans
 from markups import home_markup
-from parser import parse_all
+from parser import parser_task
 from handlers import routers
-from notifications import notifier_loop
+from notifications import notifier_loop, notifications_task
 
 
 load_dotenv('.env')
@@ -41,22 +41,15 @@ async def start_handler(message: Message):
     await message.answer(start_ans, reply_markup=home_markup)
 
 
-async def periodic_parser():
-    '''Функция, периодически вызывающая парсер всех данных'''
-
-    while True:
-        parse_all()
-        await asyncio.sleep(PARSE_DELAY)
-
-
 async def main():
     '''Запускает бота, парсер и рассылку уведомлений параллельно'''
 
     logging.info('Starting parser')
-    asyncio.create_task(periodic_parser())
+    parser_task.run()
 
     logging.info('Starting notifier')
-    asyncio.create_task(notifier_loop(bot))
+    notifications_task.parametrs = [bot]
+    notifications_task.run()
 
     logging.info('Bot started')
 

@@ -1,4 +1,5 @@
 from os import makedirs
+import asyncio
 import requests
 import logging
 
@@ -13,6 +14,8 @@ from .standings import (
     parse_drivers,
     parse_teams
 )
+from settings import PARSE_DELAY
+from utils import ParallelTask
 
 
 exc = requests.exceptions.ConnectionError
@@ -60,6 +63,14 @@ def parse_all():
     except exc:
         logging.warning('unable to parse teams')
 
+
+async def parser_loop():
+    while True:
+        parse_all()
+        await asyncio.sleep(PARSE_DELAY)
+
+
+parser_task = ParallelTask(parser_loop)
 
 if __name__ == '__main__':
     parse_all()
