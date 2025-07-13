@@ -53,3 +53,19 @@ async def number_of_users_handler(message: Message):
         await message.answer(f'{len(users_list)}', reply_markup=admin_markup)
     else:
         await message.answer('Ты не админ!')
+
+
+@admin_router.message(Command('parser_data'))
+async def parser_data_handler(message: Message):
+    '''Отправляет данные парсера'''
+
+    if user_is_admin(message):
+        last = FSInputFile('parser/data/last.json', filename='last.json')
+        schedule = FSInputFile('parser/data/schedule.json', filename='schedule.json')
+        standings = FSInputFile('parser/data/standings.json', filename='standings.json')
+
+        await message.answer_document(last)
+        await message.answer_document(schedule)
+        await message.answer_document(standings, reply_markup=admin_markup)
+    else:
+        await message.answer('Ты не админ!')
