@@ -6,7 +6,7 @@ import asyncio
 from aiogram import Bot
 
 from parser.schedule import get_next_race
-from utils import msk
+from utils import msk, ParallelTask
 from settings import notification_template
 
 
@@ -148,6 +148,8 @@ async def notifier_loop(bot: Bot):
         else:
             await asyncio.sleep(600)
 
+
+notifications_task = ParallelTask(notifier_loop)
 
 if __name__ == '__main__':
     pass

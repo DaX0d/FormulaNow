@@ -1,6 +1,28 @@
 import os
+import asyncio
 import requests
 import json
+
+
+class ParallelTask:
+    '''Параллельно работающая задача'''
+
+    def __init__(self, asnc_fncn, *, prms: list = []):
+        self.function = asnc_fncn
+        self.parametrs = prms
+    
+    def run(self):
+        if not self.parametrs:
+            self.task = asyncio.create_task(self.function())
+        else:
+            self.task = asyncio.create_task(self.function(*self.parametrs))
+    
+    def kill(self):
+        self.task.cancel('killed')
+    
+    def reload(self):
+        self.kill()
+        self.run()
 
 
 def msk(t: str) -> str:

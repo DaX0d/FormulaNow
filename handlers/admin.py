@@ -7,7 +7,7 @@ from aiogram import Router
 from aiogram.types import Message, FSInputFile
 from aiogram.filters import Command
 
-from parser import parse_all
+from parser import parse_all, parser_task
 from markups import admin_markup, home_markup
 from utils import remove_parser_files
 
@@ -79,7 +79,12 @@ async def reload_parser_handler(message: Message):
 
     if user_is_admin(message):
         remove_parser_files()
-        parse_all()
+        parser_task.reload()
         await message.answer('Парсер перезапущен', reply_markup=admin_markup)
     else:
         await message.answer('Ты не админ!', reply_markup=home_markup)
+
+
+@admin_router.message(Command('reload_notifications'))
+async def reload_notifications_handler(message: Message):
+    '''Перезапускает уведомления'''
