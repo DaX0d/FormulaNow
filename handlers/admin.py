@@ -13,6 +13,10 @@ ADMIN_ID = os.getenv('ADMIN_ID')
 admin_router = Router(name='admin')
 
 
+async def admin_menu_handler(message: Message):
+    '''Выводит меню админа'''
+
+
 @admin_router.message(Command('list_of_users'))
 async def list_of_users_handler(message: Message):
     '''Отпправляет АДМИНУ файл с айди всех пользователей'''
