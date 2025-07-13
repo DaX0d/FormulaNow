@@ -15,7 +15,8 @@ from settings import (
     list_of_users_button_text,
     number_of_users_button_text,
     parser_data_button_text,
-    parser_reload_button_text
+    parser_reload_button_text,
+    notifications_reload_button_text
 )
 from .last_race import (
     last_race_handler,
@@ -31,7 +32,8 @@ from .admin import (
     list_of_users_handler,
     number_of_users_handler,
     parser_data_handler,
-    reload_parser_handler
+    reload_parser_handler,
+    reload_notifications_handler
 )
 from markups import home_markup
 
@@ -52,7 +54,8 @@ buttons_dict = {
     list_of_users_button_text: list_of_users_handler,
     number_of_users_button_text: number_of_users_handler,
     parser_data_button_text: parser_data_handler,
-    parser_reload_button_text: reload_parser_handler
+    parser_reload_button_text: reload_parser_handler,
+    notifications_reload_button_text: reload_notifications_handler
 }
 
 
