@@ -26,7 +26,23 @@ class TestMessage(Message):
             'text': text,
             'parse_mode': parse_mode,
             'reply_markup': reply_markup
-        }  
+        }
+    
+    def answer_document(self, document, *, caption = None, parse_mode = None, reply_markup = None) -> dict:
+        return {
+            'document': document,
+            'caption': caption,
+            'parse_mode': parse_mode,
+            'reply_markup': reply_markup
+        }
+    
+    def answer_photo(self, photo, *, caption = None, parse_mode = None, reply_markup = None) -> dict:
+        return {
+            'photo': photo,
+            'caption': caption,
+            'parse_mode': parse_mode,
+            'reply_markup': reply_markup
+        }   
 
     @classmethod
     def __generate_id(cls):
