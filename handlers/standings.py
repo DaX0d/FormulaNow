@@ -33,7 +33,7 @@ async def standings_handler(message: Message):
     # ans = ans.replace('(', '\\(')
     # ans = ans.replace(')', '\\)')
 
-    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
+    return await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
 
 
 @standings_router.message(Command('teams'))
@@ -52,4 +52,4 @@ async def teams_handler(message: Message):
         )
         i += 1
     
-    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
+    return await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)

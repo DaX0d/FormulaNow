@@ -53,7 +53,7 @@ async def next_race_handler(message: Message):
 
     ans += information
 
-    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
+    return await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
 
 
 @next_race_router.message(Command('track'))
@@ -74,4 +74,4 @@ async def track_handler(message: Message):
 
     ans = ans.replace('-', '\\-')
 
-    await message.answer_photo(photo_file, parse_mode='MarkdownV2', caption=ans, reply_markup=home_markup)
+    return await message.answer_photo(photo_file, parse_mode='MarkdownV2', caption=ans, reply_markup=home_markup)

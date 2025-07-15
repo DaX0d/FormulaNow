@@ -15,4 +15,4 @@ async def guide_handler(message: Message):
 
     guide = FSInputFile('static/guide.pdf', filename='Гайд.pdf')
 
-    await message.answer_document(guide, caption=guide_ans, reply_markup=home_markup)
+    return await message.answer_document(guide, caption=guide_ans, reply_markup=home_markup)
