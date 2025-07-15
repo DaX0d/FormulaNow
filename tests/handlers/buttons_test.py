@@ -80,3 +80,23 @@ class ButtonsTestCase(unittest.IsolatedAsyncioTestCase):
         message = TestMessage('Список пользователей')
         answer = await buttons_handler(message)
         self.assertTrue(answer['document'])
+
+    async def test_number_of_users_button(self):
+        message = TestMessage('Количество пользователей')
+        answer = await buttons_handler(message)
+        self.assertTrue(answer['text'].isdigit())
+    
+    async def test_parser_data_button(self):
+        message = TestMessage('Данные парсера')
+        answer = await buttons_handler(message)
+        self.assertTrue(answer['document'])
+    
+    async def test_parser_reload_button(self):
+        message = TestMessage('Перезапуск парсера')
+        answer = await buttons_handler(message)
+        self.assertEqual(answer['text'], settings.parser_reload_button_text)
+    
+    async def test_reload_notifications(self):
+        message = TestMessage('Перезапуск уведомлений')
+        answer = await buttons_handler(message)
+        self.assertEqual(answer['text'], 'Уведомления перезапущены')
