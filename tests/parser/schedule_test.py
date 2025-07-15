@@ -6,7 +6,7 @@ import parser
 from utils import try_open
 
 
-class ScheduleTestCase(unittest.TestCase):
+class SchedulePraserTestCase(unittest.TestCase):
     @unittest.expectedFailure
     def test_parse_chedule(self):
         self.assertRaises(
