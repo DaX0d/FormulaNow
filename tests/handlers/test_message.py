@@ -21,7 +21,7 @@ class TestMessage(Message):
         chat = Chat(id=69, type='private')
         super().__init__(message_id=message_id, date=date, chat=chat, text=text, from_user=user)
         
-    def answer(self, text, *, parse_mode=None, reply_markup=None) -> dict:
+    async def answer(self, text, *, parse_mode=None, reply_markup=None) -> dict:
         return {
             'text': text,
             'parse_mode': parse_mode,
@@ -29,7 +29,7 @@ class TestMessage(Message):
         }
     
     def answer_document(self, document, *, caption = None, parse_mode = None, reply_markup = None) -> dict:
-        return {
+        self.data =  {
             'document': document,
             'caption': caption,
             'parse_mode': parse_mode,

@@ -38,4 +38,4 @@ async def schedule_handler(message: Message):
         
         ans += '\n'
 
-    await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
+    return await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
