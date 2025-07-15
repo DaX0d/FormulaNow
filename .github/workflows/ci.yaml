@@ -6,6 +6,9 @@ on:
     - dev
   workflow_dispatch:
 
+env:
+  ADMIN_ID: ${{ secrets.ADMIN_ID}}
+
 jobs:
   test:
     name: Test changes
