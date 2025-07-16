@@ -18,7 +18,10 @@ class ParallelTask:
             self.task = asyncio.create_task(self.function(*self.parametrs))
     
     def kill(self):
-        self.task.cancel('killed')
+        try:
+            self.task.cancel('killed')
+        except AttributeError:
+            pass
     
     def reload(self):
         self.kill()
