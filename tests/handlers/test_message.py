@@ -29,7 +29,7 @@ class TestMessage(Message):
         }
     
     async def answer_document(self, document, *, caption = None, parse_mode = None, reply_markup = None) -> dict:
-        self.data =  {
+        return {
             'document': document,
             'caption': caption,
             'parse_mode': parse_mode,
