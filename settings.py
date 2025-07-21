@@ -19,6 +19,7 @@ standings_template = '>`{:27} \\- {:>3}`\n'
 teams_template = '>`{:2}\\. {:<14} \\- {:>3}`\n'
 track_template = '*{}*\n\n*Название трассы:* {}\n*Город:* {}\n*Длина круга:* {}\n*Число кругов:* {}\n*Число поворотов:* {}'
 notification_template = '*{} состоится {}*\n{}\nНачало в *{}*\n*Не пропусти\\!*'
+race_week_notification_template = '*RACE WEEK*\n*{}*'
 
 # Текста кнопок
 next_race_button_text = 'Следующая гонка'
