@@ -18,7 +18,10 @@ class ParallelTask:
             self.task = asyncio.create_task(self.function(*self.parametrs))
     
     def kill(self):
-        self.task.cancel('killed')
+        try:
+            self.task.cancel('killed')
+        except AttributeError:
+            pass
     
     def reload(self):
         self.kill()
@@ -86,7 +89,9 @@ def write_to_json_from_page(page: requests.Response, filename: str, key: str):
 
 def remove_parser_files():
     '''Удаляет дата-файлы из парсера'''
-
-    os.remove('parser/data/last.json')
-    os.remove('parser/data/schedule.json')
-    os.remove('parser/data/standings.json')
+    try:
+        os.remove('parser/data/last.json')
+        os.remove('parser/data/schedule.json')
+        os.remove('parser/data/standings.json')
+    except FileNotFoundError:
+        pass

@@ -64,8 +64,8 @@ async def buttons_handler(message: Message):
     '''Вызывает хендлер, соответствующий нажатой кнопке'''
 
     if message.text in buttons_dict.keys():
-        await buttons_dict[message.text](message)
+        return await buttons_dict[message.text](message)
     elif message.text == 'Назад':
-        await message.answer('Главное меню', reply_markup=home_markup)
+        return await message.answer('Главное меню', reply_markup=home_markup)
     else:
-        await message.answer('Действие не распознано', reply_markup=home_markup)
+        return await message.answer('Действие не распознано', reply_markup=home_markup)

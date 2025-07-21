@@ -6,12 +6,23 @@ on:
     - dev
   workflow_dispatch:
 
+env:
+  ADMIN_ID: ${{ secrets.ADMIN_ID}}
+
 jobs:
   test:
     name: Test changes
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v4
+    - name: Dowload static and users
+      run: |
+        curl -L "https://drive.usercontent.google.com/u/0/uc?id=1R1iwDrlHSQfSt3tAQ8lh5SOOWmaq7YWz&export=download" -o static.zip
+        unzip static.zip -d ./
+        rm static.zip
+        curl -L "https://drive.google.com/uc?export=download&id=$USERS_FILE_ID" -o users.json
+      env:
+        USERS_FILE_ID: ${{ secrets.USERS_FILE_ID}}
     - name: Cache dependencies
       id: cache-dependencies
       uses: actions/setup-python@v5

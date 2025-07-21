@@ -30,9 +30,9 @@ async def admin_menu_handler(message: Message):
     '''Выводит меню админа'''
 
     if user_is_admin(message):
-        await message.answer('Админское меню', reply_markup=admin_markup)
+        return await message.answer('Админское меню', reply_markup=admin_markup)
     else:
-        await message.answer('Ты не админ!', reply_markup=home_markup)
+        return await message.answer('Ты не админ!', reply_markup=home_markup)
 
 
 @admin_router.message(Command('list_of_users'))
@@ -41,9 +41,9 @@ async def list_of_users_handler(message: Message):
 
     if user_is_admin(message):
         users_file = FSInputFile('users.json', filename='users.json')
-        await message.answer_document(users_file, reply_markup=admin_markup)
+        return await message.answer_document(users_file, reply_markup=admin_markup)
     else:
-        await message.answer('Ты не админ!', reply_markup=home_markup)
+        return await message.answer('Ты не админ!', reply_markup=home_markup)
 
 
 @admin_router.message(Command('number_of_users'))
@@ -53,9 +53,9 @@ async def number_of_users_handler(message: Message):
     if user_is_admin(message):
         with open('users.json', 'r', encoding='utf-8') as file:
             users_list = json.load(file)
-        await message.answer(f'{len(users_list)}', reply_markup=admin_markup)
+        return await message.answer(f'{len(users_list)}', reply_markup=admin_markup)
     else:
-        await message.answer('Ты не админ!', reply_markup=home_markup)
+        return await message.answer('Ты не админ!', reply_markup=home_markup)
 
 
 @admin_router.message(Command('parser_data'))
@@ -69,9 +69,9 @@ async def parser_data_handler(message: Message):
 
         await message.answer_document(last)
         await message.answer_document(schedule)
-        await message.answer_document(standings, reply_markup=admin_markup)
+        return await message.answer_document(standings, reply_markup=admin_markup)
     else:
-        await message.answer('Ты не админ!', reply_markup=home_markup)
+        return await message.answer('Ты не админ!', reply_markup=home_markup)
 
 
 @admin_router.message(Command('reload_parser'))
@@ -81,9 +81,9 @@ async def reload_parser_handler(message: Message):
     if user_is_admin(message):
         remove_parser_files()
         parser_task.reload()
-        await message.answer('Парсер перезапущен', reply_markup=admin_markup)
+        return await message.answer('Парсер перезапущен', reply_markup=admin_markup)
     else:
-        await message.answer('Ты не админ!', reply_markup=home_markup)
+        return await message.answer('Ты не админ!', reply_markup=home_markup)
 
 
 @admin_router.message(Command('reload_notifications'))
@@ -93,6 +93,6 @@ async def reload_notifications_handler(message: Message):
     if user_is_admin(message):
         Conditions.drop_flags()
         notifications_task.reload()
-        await message.answer('Уведомления перезапущены')
+        return await message.answer('Уведомления перезапущены')
     else:
-        await message.answer('Ты не админ!', reply_markup=home_markup)
+        return await message.answer('Ты не админ!', reply_markup=home_markup)
