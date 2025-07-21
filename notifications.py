@@ -17,6 +17,7 @@ class Conditions:
     qualy_soon = False
     race_tomorrow = False
     race_soon = False
+    race_week = False
     
     def __init__(self):
         self.next_race = get_next_race()
@@ -62,6 +63,13 @@ class Conditions:
             and (now + datetime.timedelta(hours=1)).timetz() >= race_time
             and not self.race_soon
         ):
+            return True
+        else:
+            return False
+    
+    def is_race_week(self, now = datetime.datetime.now(MOSCOW_TZ)) -> bool:
+        race_date = datetime.date(*(int(i) for i in self.next_race['schedule']['race']['date'].split('-')))
+        if race_date - datetime.timedelta(days=6) == now.date():
             return True
         else:
             return False
