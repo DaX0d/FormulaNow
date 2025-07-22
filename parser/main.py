@@ -43,17 +43,16 @@ def parse_all():
 
     try:
         if parse_last_sprint() == 404:
-            logging.warning('unable to parse last sprint')
+            pass
+            # logging.warning('unable to parse last sprint')
     except exc:
-        # logging.warning('unable to parse last sprint')
-        pass
+        logging.warning('unable to parse last sprint')
     
     try:
         if parse_last_sprint_qualy() == 404:
             logging.warning('unable to parse last sprint qualy')
     except exc:
-        # logging.warning('unable to parse last sprint qualy')
-        pass
+        logging.warning('unable to parse last sprint qualy')
 
     try:
         parse_drivers()

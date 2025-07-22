@@ -69,7 +69,7 @@ class Conditions:
     
     def is_race_week(self, now = datetime.datetime.now(MOSCOW_TZ)) -> bool:
         race_date = datetime.date(*(int(i) for i in self.next_race['schedule']['race']['date'].split('-')))
-        if race_date - datetime.timedelta(days=6) == now.date():
+        if race_date - datetime.timedelta(days=6) <= now.date() and not self.race_week:
             return True
         else:
             return False
@@ -160,6 +160,11 @@ async def notifier_loop(bot: Bot):
             )
 
             Conditions.race_soon = True
+        
+        elif conditions.is_race_week():
+            await send_race_week_notification(bot, conditions.next_race['name'])
+
+            Conditions.race_week = True
         
         if all([
             conditions.qualy_soon,
