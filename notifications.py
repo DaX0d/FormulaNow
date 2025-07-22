@@ -7,7 +7,7 @@ from aiogram import Bot
 
 from parser.schedule import get_next_race
 from utils import msk, ParallelTask
-from settings import notification_template
+from settings import notification_template, race_week_notification_template
 
 
 MOSCOW_TZ = datetime.timezone(datetime.timedelta(hours=3))
@@ -96,6 +96,21 @@ async def send_notification(bot: Bot, when, what, name, time):
 
     ans = ans.replace('.', '\\.')
             
+    for user_id in all_users_id:
+        try:
+            await bot.send_message(user_id, ans, parse_mode='MarkdownV2')
+        except Exception as e:
+            logging.warning(f'Unable to send notification for user {user_id}: {e}')
+
+
+async def send_race_week_notification(bot: Bot, what):
+    '''Присылает уведомление о начале гоночной недели'''
+
+    with open('users.json', 'r', encoding= 'utf-8') as file:
+        all_users_id = json.load(file)
+
+    ans = race_week_notification_template.format(what)
+
     for user_id in all_users_id:
         try:
             await bot.send_message(user_id, ans, parse_mode='MarkdownV2')
