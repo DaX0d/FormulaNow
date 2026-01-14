@@ -1,10 +1,13 @@
+PARSE_DELAY = 300
+CURRENT_YEAR = 2026
+
 # Ответы на сообщения
 start_ans = 'Привет! Я FormulaNow — твой бот по Формуле 1. Я расскажу тебе, когда будет следующая гонка, кто лидирует в чемпионате и многое другое. Нажми на Меню или Кнопки, чтобы приступить к работе🏆'
 next_race_ans = '*Расписание следующей гонки*\n\n'
-schedule_ans = '*Расписание заездов 2025 года*\n\n'
+schedule_ans = f'*Расписание заездов {CURRENT_YEAR} года*\n\n'
 track_ans = ''
-standings_ans = '*Личный зачет 2025 года*\n_\\*если съезжает, переверни телефон_\n'
-teams_ans = '*Кубок конструкторов 2025 года*\n\n'
+standings_ans = f'*Личный зачет {CURRENT_YEAR} года*\n_\\*если съезжает, переверни телефон_\n'
+teams_ans = f'*Кубок конструкторов {CURRENT_YEAR} года*\n\n'
 results_ans = 'Выбери на клавиатуре, что хочешь увидеть'
 last_race_ans = '*Результаты последней гонки*\n\n'
 last_qualy_ans = '*Результаты последней квалификации*\n\n'
@@ -39,6 +42,33 @@ parser_reload_button_text = 'Перезапуск парсера'
 notifications_reload_button_text = 'Перезапуск уведомлений'
 
 # Названия гран при
+schedule_locations_translation = {
+    "Australia": "🇦🇺 Австралия",
+    "China": "🇨🇳 Китай",
+    "Japan": "🇯🇵 Япония",
+    "Bahrain": "🇧🇭 Бахрейн",
+    "Saudi Arabia": "🇸🇦 Саудовская Аравия",
+    "Miami Gardens": "🇺🇸 Майами",
+    "Canada": "🇨🇦 Канада",
+    "Monaco": "🇲🇨 Монако",
+    "Barcelona": "🇪🇸 Барселона",
+    "Austria": "🇦🇹 Австрия",
+    "United Kingdom": "🇬🇧 Великобритания",
+    "Belgium": "🇧🇪 Бельгия",
+    "Hungary": "🇭🇺 Венгрия",
+    "Netherlands": "🇳🇱 Нидерланды",
+    "Italy": "🇮🇹 Монца",
+    "Madrid": "🇪🇸 Мадрид",
+    "Azerbaijan": "🇦🇿 Азербайджан",
+    "Singapore": "🇸🇬 Сингапур",
+    "Austin": "🇺🇸 Остин",
+    "Mexico": "🇲🇽 Мексика",
+    "Brazil": "🇧🇷 Бразилия",
+    "Las Vegas": "🇺🇸 Лас\\-Вегас",
+    "Qatar": "🇶🇦 Катар",
+    "United Arab Emirates": "🇦🇪 Абу\\-Даби"
+}
+
 grand_prix_locations = [
     "🇦🇺 Австралия",
     "🇨🇳 Китай",
@@ -156,6 +186,3 @@ teams_names_dict = {
     'alpine': 'Alpine',
     'sauber': 'Sauber'
 }
-
-
-PARSE_DELAY = 300

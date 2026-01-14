@@ -1,8 +1,9 @@
 import requests
 import json
 import datetime
+import fastf1.events
 
-from settings import grand_prix_locations
+from settings import grand_prix_locations, CURRENT_YEAR
 from utils import write_to_json_from_page
 
 
@@ -59,39 +60,11 @@ def parse_last_sprint_qualy():
 
 
 # Геттеры
-def get_schedule() -> list[dict]:
-    '''Возвращает расписание в виде списка со словарями.
+def get_schedule():
+    '''Возвращает расписание в виде списка со словарями.'''
 
-    Кажный словарь имеет структуру:
-    {
-        'id': race['round'] - 1,
-        'name': grand_prix_locations[race['round'] - 1],
-        'date': race['schedule']['race']['date'],
-        'race_time': race['schedule']['race']['time'][:-4],
-        'q_time': race['schedule']['qualy']['time'][:-4],
-        'sq_time': race['schedule']['sprintQualy']['time'],
-        'sprint_time': race['schedule']['sprintRace']['time']
-    }
-    '''
+    schedule = fastf1.events.get_event_schedule(CURRENT_YEAR, include_testing=False)
 
-    schedule = []
-
-    with open('parser/data/schedule.json', 'r', encoding='utf-8') as file:
-        data = json.load(file)
-
-        for race in data['races']:
-            d = {
-                'id': race['round'] - 1,
-                'name': grand_prix_locations[race['round'] - 1],
-                'date': race['schedule']['race']['date'],
-                'race_time': race['schedule']['race']['time'][:-4],
-                'q_time': race['schedule']['qualy']['time'][:-4],
-                'sq_time': race['schedule']['sprintQualy']['time'],
-                'sprint_time': race['schedule']['sprintRace']['time']
-            }
-
-            schedule.append(d)
-        
     return schedule
 
 

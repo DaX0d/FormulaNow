@@ -2,6 +2,7 @@ import os
 import asyncio
 import requests
 import json
+import datetime
 
 
 class ParallelTask:
@@ -28,10 +29,9 @@ class ParallelTask:
         self.run()
 
 
-def msk(t: str) -> str:
+def msk(t: datetime.datetime) -> datetime.datetime:
     '''Принимает время по гринвичу, возвращает по московскому времени'''
-    h = (int(t[:2].lstrip('0') or '0') + 3) % 24
-    return '{:02d}{}'.format(h, t[2:])
+    return t + datetime.timedelta(hours=3)
 
 
 def prev_date(day, month, d) -> tuple[int, int]:

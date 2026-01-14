@@ -1,10 +1,13 @@
+import datetime
+
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 
 from settings import (
     schedule_ans,
-    schedule_template
+    schedule_template,
+    schedule_locations_translation
 )
 from parser.schedule import get_schedule
 from markups import home_markup
@@ -21,19 +24,21 @@ async def schedule_handler(message: Message):
     schedule = get_schedule()
     ans = schedule_ans
 
-    for i in range(len(schedule)):
+    for i in range(len(schedule.index)):
+        # schedule_template = '>*{}*  *{}*   *{}*\n>    *Гонка*: {}   Квалификация: {}\n'
+        event = schedule.iloc[i]
         ans += schedule_template.format(
             i + 1,
-            schedule[i]['name'],
-            f'{schedule[i]['date'][-2:]}\\.{schedule[i]['date'][5:7]}',
-            msk(schedule[i]['race_time']),
-            msk(schedule[i]['q_time'])
+            schedule_locations_translation[event['Country'] if event['Country'] not in ['United States', 'Spain'] else event['Location']],
+            event['EventDate'].strftime('%d\\.%m'),
+            msk(event['Session5DateUtc']).strftime('%H:%M'),
+            msk(event['Session4DateUtc']).strftime('%H:%M')
         )
 
-        if schedule[i]['sprint_time']:
+        if event['Session3'] == 'Sprint':
             ans += '>    Спринт: {}   Спринт квала: {}\n'.format(
-                msk(schedule[i]['sprint_time'][:-4]),
-                msk(schedule[i]['sq_time'][:-4])
+                msk(event['Session3DateUtc']).strftime('%H:%M'),
+                msk(event['Session2DateUtc']).strftime('%H:%M'),
             )
         
         ans += '\n'
