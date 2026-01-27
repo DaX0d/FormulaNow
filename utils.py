@@ -4,6 +4,11 @@ import requests
 import json
 import datetime
 
+from settings import (
+    session_name_translation,
+    schedule_locations_translation
+)
+
 
 class ParallelTask:
     '''Параллельно работающая задача'''
@@ -32,6 +37,14 @@ class ParallelTask:
 def msk(t: datetime.datetime) -> datetime.datetime:
     '''Принимает время по гринвичу, возвращает по московскому времени'''
     return t + datetime.timedelta(hours=3)
+
+
+def translate_location(event) -> str:
+    return schedule_locations_translation[event['Country'] if event['Country'] not in ['United States', 'Spain'] else event['Location']]
+
+
+def translate_session(name) -> str:
+    return session_name_translation[name]
 
 
 def prev_date(day, month, d) -> tuple[int, int]:

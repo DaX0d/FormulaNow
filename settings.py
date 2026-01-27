@@ -1,6 +1,9 @@
 PARSE_DELAY = 300
 CURRENT_YEAR = 2026
 
+DATE_FORMAT = '%d\\.%m'
+TIME_FORMAT = '%H:%M'
+
 # Ответы на сообщения
 start_ans = 'Привет! Я FormulaNow — твой бот по Формуле 1. Я расскажу тебе, когда будет следующая гонка, кто лидирует в чемпионате и многое другое. Нажми на Меню или Кнопки, чтобы приступить к работе🏆'
 next_race_ans = '*Расписание следующей гонки*\n\n'
@@ -67,6 +70,16 @@ schedule_locations_translation = {
     "Las Vegas": "🇺🇸 Лас\\-Вегас",
     "Qatar": "🇶🇦 Катар",
     "United Arab Emirates": "🇦🇪 Абу\\-Даби"
+}
+
+session_name_translation = {
+    'Practice 1': 'Практика 1',
+    'Practice 2': 'Практика 2',
+    'Practice 3': 'Практика 3',
+    'Sprint Qualifying': 'Квалификация к спринту',
+    'Sprint': 'Спринт',
+    'Qualifying': 'Квалификация',
+    'Race': 'Гонка'
 }
 
 grand_prix_locations = [

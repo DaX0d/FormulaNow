@@ -8,11 +8,13 @@ from settings import (
     track_photoes,
     grand_prix_locations,
     track_ans,
-    track_template
+    track_template,
+    DATE_FORMAT,
+    TIME_FORMAT
 )
 from parser.schedule import get_next_race
 from markups import home_markup
-from utils import msk, prev_date
+from utils import msk, prev_date, translate_location, translate_session
 
 
 next_race_router = Router(name='next_race')
@@ -24,31 +26,20 @@ async def next_race_handler(message: Message):
 
     ans = next_race_ans
     next_race = get_next_race()
-    day, month = map(int, next_race['race_date'].split('.'))
-
-    if next_race['schedule']['sprintRace']['time']:
-        fp2_n = 'Квалификация к спринту'
-        fp2_t = msk(next_race['schedule']['sprintQualy']['time'][:-4])
-        fp3_n = 'Спринт'
-        fp3_t = msk(next_race['schedule']['sprintRace']['time'][:-4])
-    else:
-        fp2_n = 'Практика 2'
-        fp2_t = msk(next_race['schedule']['fp2']['time'][:-4])
-        fp3_n = 'Практика 3'
-        fp3_t = msk(next_race['schedule']['fp3']['time'][:-4])
+    # day, month = map(int, next_race['race_date'].split('.'))
     
     information = next_race_template.format(
-        name=next_race['name'],
-        fr_date='{:02d}\\.{:02d}'.format(*prev_date(day, month, 2)),
-        sat_date='{:02d}\\.{:02d}'.format(*prev_date(day, month, 1)),
-        sun_date='{:02d}\\.{:02d}'.format(day, month),
-        fp1_t=msk(next_race['schedule']['fp1']['time'][:-4]),
-        fp2_t=fp2_t,
-        fp3_t=fp3_t,
-        q_t=msk(next_race['schedule']['qualy']['time'][:-4]),
-        r_t=msk(next_race['schedule']['race']['time'][:-4]),
-        fp2_n=fp2_n,
-        fp3_n=fp3_n
+        name=translate_location(next_race),
+        fr_date=next_race['Session1DateUtc'].strftime(DATE_FORMAT),
+        sat_date=next_race['Session3DateUtc'].strftime(DATE_FORMAT),
+        sun_date=next_race['Session5DateUtc'].strftime(DATE_FORMAT),
+        fp1_t=msk(next_race['Session1DateUtc']).strftime(TIME_FORMAT),
+        fp2_t=msk(next_race['Session2DateUtc']).strftime(TIME_FORMAT),
+        fp3_t=msk(next_race['Session3DateUtc']).strftime(TIME_FORMAT),
+        q_t=msk(next_race['Session4DateUtc']).strftime(TIME_FORMAT),
+        r_t=msk(next_race['Session5DateUtc']).strftime(TIME_FORMAT),
+        fp2_n=translate_session(next_race['Session2']),
+        fp3_n=translate_session(next_race['Session3'])
     )
 
     ans += information
