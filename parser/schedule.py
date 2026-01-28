@@ -69,42 +69,7 @@ def get_schedule():
 
 
 def get_next_race() -> dict:
-    '''Возвращает дынные о следующей гонке в виде словаря
-
-    Структура словаря
-    {
-        'name': grand_prix_locations[race['round'] - 1],
-        'race_date': race_date,
-        'track': race['circuit'],
-        'schedule': race['schedule'],
-        'gp': race
-    }
-    '''
-     
-    # now = datetime.datetime.now(datetime.timezone.utc)
-    # utc_offset = datetime.timedelta(hours=3)
-
-    # with open('parser/data/schedule.json', 'r', encoding='utf-8') as file:
-    #     data = json.load(file)
-
-    #     for race in data['races']:
-    #         race_dt_str = race['schedule']['race']['date'] + 'T' + race['schedule']['race']['time']  # 2025-06-01T13:00:00Z
-    #         race_dt_utc = datetime.datetime.strptime(race_dt_str, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=datetime.timezone.utc)
-
-    #         # Переводим в локальное время (UTC+3)
-    #         race_dt_local = race_dt_utc + utc_offset
-
-    #         if race_dt_local > now:
-    #             ret = {
-    #                 'name': grand_prix_locations[race['round'] - 1],
-    #                 'race_date': '{}.{}'.format(race['schedule']['race']['date'][-2:], race['schedule']['race']['date'][5:7]),
-    #                 'track': race['circuit'],
-    #                 'schedule': race['schedule'],
-    #                 'gp': race
-    #             }
-
-    #             return ret
-    # raise ValueError()
+    '''Возвращает дынные о следующей гонке'''
     
     return fastf1.events.get_events_remaining(datetime.datetime.now(), include_testing=False).iloc[0]
 

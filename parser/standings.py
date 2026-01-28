@@ -1,12 +1,14 @@
 import requests
 import json
+from fastf1.ergast import Ergast
 
-from settings import drivers_shortname_rus, teams_names_dict
+from settings import drivers_shortname_rus, teams_names_dict, CURRENT_YEAR
 
 
 DRIVERS_URL = 'https://f1api.dev/api/current/drivers-championship'
 TEAMS_URL = 'https://f1api.dev/api/current/constructors-championship'
 
+ergast = Ergast()
 
 def parse_drivers():
     '''Зарпашивает с API личный зачет F1 и сохранаяет'''
@@ -56,21 +58,13 @@ def parse_teams():
         raise exc
 
 
-def get_drivers() -> dict[str, int]:
-    '''Возвращает словарь с личным зачетом'''
-    
-    drivers_dict = {}
+def get_drivers():
+    '''Возвращает таблицу с личным зачетом'''
 
-    with open('parser/data/standings.json', 'r', encoding='utf-8') as file:
-        drivers_data: dict = json.load(file)['drivers']
-    
-    for driver in drivers_data['drivers_championship']:
-        sname = driver['driver']['shortName']
-        team_id = driver['teamId']
-
-        drivers_dict[drivers_shortname_rus[sname] + f' \\({teams_names_dict[team_id]}\\)'] = driver['points']
-    
-    return drivers_dict
+    try:
+        return ergast.get_driver_standings(CURRENT_YEAR).content[0]
+    except IndexError:
+        return None
 
 
 def get_teams() -> dict[str, int]:

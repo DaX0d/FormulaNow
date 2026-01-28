@@ -1,3 +1,4 @@
+from types import NoneType
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
@@ -6,7 +7,8 @@ from settings import (
     standings_ans,
     teams_ans,
     standings_template,
-    teams_template
+    teams_template,
+    driver_translation
 )
 from parser.standings import get_drivers, get_teams
 from markups import home_markup
@@ -22,16 +24,19 @@ async def standings_handler(message: Message):
     ans = standings_ans
     standings = get_drivers()
 
-    i = 1
-    for name in standings.keys():
-        ans += standings_template.format(
-            name,
-            standings[name]
-        )
-        i += 1
+    if not isinstance(standings, NoneType):
+        for i in range(len(standings.index)):
+            driver = standings.iloc[i]
+            ans += standings_template.format(
+                f'{driver_translation[driver['driverId']]} ({driver['constructorNames'][-1].replace(' F1 Team', '')})',
+                int(driver['points'])
+            )
+    else:
+        ans += 'Пока что нет данных'
     
-    # ans = ans.replace('(', '\\(')
-    # ans = ans.replace(')', '\\)')
+    ans = ans.replace('.', '\\.')
+    ans = ans.replace('(', '\\(')
+    ans = ans.replace(')', '\\)')
 
     return await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
 

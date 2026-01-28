@@ -136,6 +136,33 @@ track_photoes = [
     'ae'
 ]
 
+driver_translation = {
+    "albon": "А.Албон",
+    "alonso": "Ф.Алонсо",
+    "antonelli": "К.Антонелли",
+    "bearman": "О.Берман",
+    "bortoleto": "Г.Бортолето",
+    "bottas": "В.Боттас",
+    "colapinto": "Ф.Колапинто",
+    "gasly": "П.Гасли",
+    "hadjar": "И.Хаджар",
+    "hamilton": "Л.Хэмилтон",
+    "hulkenberg": "Н.Хюлькенберг",
+    "lawson": "Л.Лоусон",
+    "leclerc": "Ш.Леклер",
+    "lindblad": "А.Линдблад",
+    "norris": "Л.Норрис",
+    "ocon": "Э.Окон",
+    "piastri": "О.Пиастри",
+    "perez": "С.Перес",
+    "russell": "Д.Расселл",
+    "sainz": "К.Сайнс",
+    "stroll": "Л.Стролл",
+    "max_verstappen": "М.Ферстаппен",
+    "tsunoda": "Ю.Цунода",
+    "doohan": "Д.Дуан"
+}
+
 drivers_shortname_rus = {
     'PIA': 'О\\.Пиастри',
     'NOR': 'Л\\.Норрис',
