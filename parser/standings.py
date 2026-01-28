@@ -67,17 +67,10 @@ def get_drivers():
         return None
 
 
-def get_teams() -> dict[str, int]:
-    '''Возвращает словарь с кубком конструкторов'''
+def get_teams():
+    '''Возвращает таблицу с кубком конструкторов'''
     
-    teams_dict = {}
-
-    with open('parser/data/standings.json', 'r', encoding='utf-8') as file:
-        teams_data: dict = json.load(file)['teams']
-
-    for team in teams_data['constructors_championship']:
-        team_id = team['teamId']
-
-        teams_dict[teams_names_dict[team_id]] = team['points']
-    
-    return teams_dict
+    try:
+        return ergast.get_constructor_standings(CURRENT_YEAR).content[0]
+    except IndexError:
+        return None

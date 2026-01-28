@@ -48,13 +48,15 @@ async def teams_handler(message: Message):
     ans = teams_ans
     teams = get_teams()
 
-    i = 1
-    for team in teams.keys():
-        ans += teams_template.format(
-            i,
-            team,
-            teams[team]
-        )
-        i += 1
+    if not isinstance(teams, NoneType):
+        for i in range(len(teams.index)):
+            team = teams.iloc[i]
+            ans += teams_template.format(
+                i + 1,
+                team['constructorName'],
+                int(team['points'])
+            )
+    else:
+        ans += 'Пока что нет данных'
     
     return await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
