@@ -1,3 +1,4 @@
+from types import NoneType
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
@@ -9,7 +10,9 @@ from settings import (
     last_sprint_qualy_ans,
     results_ans,
     drivers_shortname_rus,
-    grand_prix_dict
+    grand_prix_dict,
+    driver_translation,
+    schedule_locations_translation
 )
 from parser.schedule import (
     get_last_race,
@@ -18,6 +21,7 @@ from parser.schedule import (
     get_last_sprint_qualy
 )
 from markups import get_results_markup
+from utils import translate_location_from_session, tg_format
 
 
 last_race_router = Router(name='last_race')
@@ -38,24 +42,29 @@ async def last_race_handler(message: Message):
 
     last_race = get_last_race()
     ans = last_race_ans
-    driver = lambda n: drivers_shortname_rus[last_race['races']['results'][n]['driver']['shortName']]
-    race_name = grand_prix_dict[last_race['races']['raceId']]
 
-    winner = '>*1\\.🥇 {}*\n'.format(driver(0))
-    second = '>*2\\.🥈 {}*\n'.format(driver(1))
-    third = '>*3\\.🥉 {}*\n\n'.format(driver(2))
+    if not isinstance(last_race, NoneType):
+        last_race.load(laps=False, telemetry=False, weather=False, messages=False, livedata=False)
+        driver = lambda n: driver_translation[last_race.results.iat[n, 3]]
+        race_name = translate_location_from_session(last_race)
 
-    other = ''
-    for i in range(3, 20):
-        other += '>{}\\. {} {}\n'.format(
-            i + 1,
-            driver(i),
-            '\\(DNF\\)' if last_race['races']['results'][i]['position'] == 'NC' else ''
-        )
+        winner = '>*1.🥇 {}*\n'.format(driver(0))
+        second = '>*2.🥈 {}*\n'.format(driver(1))
+        third = '>*3.🥉 {}*\n\n'.format(driver(2))
 
-    ans += f'*{race_name}*\n\n' + winner + second + third + other
+        other = ''
+        for i in range(3, len(last_race.results.index)):
+            other += '>{}. {} {}\n'.format(
+                i + 1,
+                driver(i),
+                ''
+            )
 
-    return await message.answer(ans, parse_mode='MarkdownV2', reply_markup=get_results_markup())
+        ans += f'*{race_name}*\n\n' + winner + second + third + other
+    else:
+        ans += 'Пока что нет данных'
+
+    return await message.answer(tg_format(ans), parse_mode='MarkdownV2', reply_markup=get_results_markup())
 
 
 @last_race_router.message(Command('qualy'))

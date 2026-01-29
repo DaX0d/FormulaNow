@@ -43,8 +43,20 @@ def translate_location(event) -> str:
     return schedule_locations_translation[event['Country'] if event['Country'] not in ['United States', 'Spain'] else event['Location']]
 
 
+def translate_location_from_session(session) -> str:
+    name = session.session_info['Meeting']['Country']['Name']
+    return schedule_locations_translation[name if name not in ['United States', 'Spain'] else session['Meeting']['Location']]
+
+
 def translate_session(name) -> str:
     return session_name_translation[name]
+
+
+def tg_format(string: str) -> str:
+    ans = string
+    for ch in ['.', '(', ')']:
+        ans = ans.replace(ch, f'\\{ch}')
+    return ans
 
 
 def prev_date(day, month, d) -> tuple[int, int]:

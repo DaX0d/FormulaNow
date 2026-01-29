@@ -61,7 +61,7 @@ def parse_last_sprint_qualy():
 
 # Геттеры
 def get_schedule():
-    '''Возвращает расписание в виде списка со словарями.'''
+    '''Возвращает расписание'''
 
     schedule = fastf1.events.get_event_schedule(CURRENT_YEAR, include_testing=False)
 
@@ -77,10 +77,14 @@ def get_next_race() -> dict:
 def get_last_race() -> dict:
     '''Возвращает результаты последней гонки'''
 
-    with open('parser/data/last.json', 'r', encoding='utf-8') as file:
-        data = json.load(file)
-    
-    return data['race']
+    schedule = fastf1.events.get_event_schedule(CURRENT_YEAR, include_testing=False)
+    t_now = datetime.datetime.now()
+    # print(schedule)
+
+    for i in range(len(schedule.index) + 1, 1, -1):
+        if schedule.at[i, 'Session5DateUtc'] < t_now:
+            return schedule.loc[i].get_race()
+    return None
 
 
 def get_last_qualy() -> dict:
