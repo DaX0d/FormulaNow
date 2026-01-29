@@ -1,4 +1,6 @@
 from types import NoneType
+import datetime
+import pandas as pd
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
@@ -21,7 +23,7 @@ from parser.schedule import (
     get_last_sprint_qualy
 )
 from markups import get_results_markup
-from utils import translate_location_from_session, tg_format
+from utils import translate_location_from_session, tg_format, format_lap_time
 
 
 last_race_router = Router(name='last_race')
@@ -71,36 +73,34 @@ async def last_race_handler(message: Message):
 async def last_qualy_handler(message: Message):
     '''Отправляет результаты последней квалификации'''
 
-    last_qauly = get_last_qualy()
+    last_qualy = get_last_qualy()
     ans = last_qualy_ans
-    driver = lambda n: drivers_shortname_rus[last_qauly['races']['qualyResults'][n]['driver']['shortName']]
-    race_name = grand_prix_dict[last_qauly['races']['raceId']]
+    if not isinstance(last_qualy, NoneType):
+        last_qualy.load(laps=False, telemetry=False, weather=False, messages=False, livedata=False)
+        driver = lambda n: driver_translation[last_qualy.results.iat[n, 3]]
+        race_name = translate_location_from_session(last_qualy)
 
-    pole = f'>*1\\. {driver(0)} \\- {last_qauly['races']['qualyResults'][0]['q3'].replace('.', '\\.')}*\n\n'
+        pole = f'>*1. {driver(0)} - {format_lap_time(last_qualy.results.iloc[0].loc['Q3'])}*\n\n'
+        print(pole)
 
-    grid = ''
-    for i in range(1, 20):
-        try:
-            grid += '>{}\\. {} \\- {}\n'.format(
-                i + 1,
-                driver(i),
-                last_qauly['races']['qualyResults'][i]['q3'].replace('.', '\\.')
-            )
-        except:
-            try:
-                grid += '>{}\\. {} \\- {}\n'.format(
-                    i + 1,
-                    driver(i),
-                    last_qauly['races']['qualyResults'][i]['q2'].replace('.', '\\.')
-                )
-            except:
-                grid += '>{}\\. {} \\- {}\n'.format(
-                    i + 1,
-                    driver(i),
-                    last_qauly['races']['qualyResults'][i]['q1'].replace('.', '\\.')
-                )
+        grid = ''
+        for i in range(1, len(last_qualy.results.index)):
+            for segment in ['Q3', 'Q2', 'Q1']:
+                time = last_qualy.results.iloc[i].loc[segment]
+                if pd.notna(time):
+                    grid += '>{:2}. {} - {}\n'.format(
+                        i + 1,
+                        driver(i),
+                        format_lap_time(time)
+                    )
+                    break
 
-    ans += f'*{race_name}*\n\n' + pole + grid
+        ans += f'*{race_name}*\n\n' + pole + grid
+    else:
+        ans += 'Пока что нет данных'
+    
+    ans = tg_format(ans)
+    print(ans)
 
     return await message.answer(ans, parse_mode='MarkdownV2', reply_markup=get_results_markup())
 

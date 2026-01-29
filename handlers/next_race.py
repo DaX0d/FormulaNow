@@ -14,7 +14,7 @@ from settings import (
 )
 from parser.schedule import get_next_race
 from markups import home_markup
-from utils import msk, prev_date, translate_location, translate_session
+from utils import msk, prev_date, translate_location, translate_session, tg_format
 
 
 next_race_router = Router(name='next_race')
@@ -44,7 +44,7 @@ async def next_race_handler(message: Message):
 
     ans += information
 
-    return await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
+    return await message.answer(tg_format(ans), parse_mode='MarkdownV2', reply_markup=home_markup)
 
 
 @next_race_router.message(Command('track'))

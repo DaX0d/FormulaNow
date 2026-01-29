@@ -1,7 +1,7 @@
 PARSE_DELAY = 300
 CURRENT_YEAR = 2026
 
-DATE_FORMAT = '%d\\.%m'
+DATE_FORMAT = '%d.%m'
 TIME_FORMAT = '%H:%M'
 
 # Ответы на сообщения
@@ -67,9 +67,9 @@ schedule_locations_translation = {
     "Austin": "🇺🇸 Остин",
     "Mexico": "🇲🇽 Мексика",
     "Brazil": "🇧🇷 Бразилия",
-    "Las Vegas": "🇺🇸 Лас\\-Вегас",
+    "Las Vegas": "🇺🇸 Лас-Вегас",
     "Qatar": "🇶🇦 Катар",
-    "United Arab Emirates": "🇦🇪 Абу\\-Даби"
+    "United Arab Emirates": "🇦🇪 Абу-Даби"
 }
 
 session_name_translation = {

@@ -12,7 +12,7 @@ from settings import (
 )
 from parser.schedule import get_schedule
 from markups import home_markup
-from utils import msk, translate_location
+from utils import msk, translate_location, tg_format
 
 
 schedule_router = Router(name='schedule_router')
@@ -44,4 +44,4 @@ async def schedule_handler(message: Message):
         
         ans += '\n'
 
-    return await message.answer(ans, parse_mode='MarkdownV2', reply_markup=home_markup)
+    return await message.answer(tg_format(ans), parse_mode='MarkdownV2', reply_markup=home_markup)

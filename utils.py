@@ -3,6 +3,7 @@ import asyncio
 import requests
 import json
 import datetime
+import pandas as pd
 
 from settings import (
     session_name_translation,
@@ -39,6 +40,17 @@ def msk(t: datetime.datetime) -> datetime.datetime:
     return t + datetime.timedelta(hours=3)
 
 
+def format_lap_time(td: pd.Timedelta) -> str:
+    """Форматирует время круга в M:SS.mmm"""
+    if pd.isna(td):
+        return ""
+    
+    total_seconds = td.total_seconds()
+    minutes = int(total_seconds // 60)
+    seconds = total_seconds % 60
+    return f"{minutes}:{seconds:06.3f}"
+
+
 def translate_location(event) -> str:
     return schedule_locations_translation[event['Country'] if event['Country'] not in ['United States', 'Spain'] else event['Location']]
 
@@ -54,7 +66,7 @@ def translate_session(name) -> str:
 
 def tg_format(string: str) -> str:
     ans = string
-    for ch in ['.', '(', ')']:
+    for ch in ['.', '(', ')', '-']:
         ans = ans.replace(ch, f'\\{ch}')
     return ans
 

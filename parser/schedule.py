@@ -79,21 +79,23 @@ def get_last_race() -> dict:
 
     schedule = fastf1.events.get_event_schedule(CURRENT_YEAR, include_testing=False)
     t_now = datetime.datetime.now()
-    # print(schedule)
 
-    for i in range(len(schedule.index) + 1, 1, -1):
-        if schedule.at[i, 'Session5DateUtc'] < t_now:
-            return schedule.loc[i].get_race()
+    for i in range(len(schedule.index)-1, -1, -1):
+        if schedule.iloc[i].loc['Session5DateUtc'] < t_now:
+            return schedule.iloc[i].get_race()
     return None
 
 
 def get_last_qualy() -> dict:
     '''Возвращает результаты последней квалификации'''
 
-    with open('parser/data/last.json', 'r', encoding='utf-8') as file:
-        data = json.load(file)
-    
-    return data['qualy']
+    schedule = fastf1.events.get_event_schedule(CURRENT_YEAR, include_testing=False)
+    t_now = datetime.datetime.now()
+
+    for i in range(len(schedule.index)-1, -1, -1):
+        if schedule.iloc[i].loc['Session4DateUtc'] < t_now:
+            return schedule.iloc[i].get_qualifying()
+    return None
 
 
 def get_last_sprint() -> dict:
