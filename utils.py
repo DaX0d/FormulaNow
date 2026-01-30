@@ -57,7 +57,7 @@ def translate_location(event) -> str:
 
 def translate_location_from_session(session) -> str:
     name = session.session_info['Meeting']['Country']['Name']
-    return schedule_locations_translation[name if name not in ['United States', 'Spain'] else session['Meeting']['Location']]
+    return schedule_locations_translation[name if name not in ['United States', 'Spain'] else session.session_info['Meeting']['Location']]
 
 
 def translate_session(name) -> str:

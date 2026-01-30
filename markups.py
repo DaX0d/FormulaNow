@@ -1,4 +1,5 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+import fastf1.events
 
 from settings import (
     next_race_button_text,
@@ -17,7 +18,7 @@ from settings import (
     parser_reload_button_text,
     notifications_reload_button_text
 )
-from parser.schedule import parse_last_sprint_qualy
+from parser.schedule import get_last_event
 
 
 # Основные кнопки
@@ -58,7 +59,7 @@ results_layout = [
 
 results_with_sprint_layout = [
     [last_sprint_button, last_race_button],
-    [last_sprint_qualy_button, last_qualy_button],
+    [last_qualy_button],
     [back_button]
 ]
 
@@ -77,8 +78,13 @@ admin_markup = ReplyKeyboardMarkup(keyboard=admin_layout)
 
 
 def get_results_markup() -> ReplyKeyboardMarkup:
-    '''Возвращает маркап результатов последней гонки в зависимости от того, был ли спринт'''
+    '''Возвращает маркап результатов последнейSprint Shootout гонки в зависимости от того, был ли спринт'''
 
-    if parse_last_sprint_qualy() != 404:
-        return results_with_sprint_markup
+    last_event = get_last_event(2)
+    
+    try:
+        if last_event.loc['Session2'] == 'Sprint Qualifying':
+            return results_with_sprint_markup
+    except:
+        pass
     return results_markup

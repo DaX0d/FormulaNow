@@ -74,46 +74,59 @@ def get_next_race() -> dict:
     return fastf1.events.get_events_remaining(datetime.datetime.now(), include_testing=False).iloc[0]
 
 
-def get_last_race() -> dict:
+def get_last_event(session_num: int):
+    schedule = fastf1.events.get_event_schedule(CURRENT_YEAR, include_testing=False)
+    t_now = datetime.datetime.now()
+
+    for i in range(len(schedule.index)-1, -1, -1):
+        if schedule.iloc[i].loc[f'Session{session_num}DateUtc'] < t_now:
+            return schedule.iloc[i]
+    return None
+    # return fastf1.events.get_event(2025, 23)
+
+
+def get_last_race():
     '''Возвращает результаты последней гонки'''
 
-    schedule = fastf1.events.get_event_schedule(CURRENT_YEAR, include_testing=False)
-    t_now = datetime.datetime.now()
+    last_event = get_last_event(5)
 
-    for i in range(len(schedule.index)-1, -1, -1):
-        if schedule.iloc[i].loc['Session5DateUtc'] < t_now:
-            return schedule.iloc[i].get_race()
-    return None
+    try:
+        return last_event.get_race()
+    except:
+        return None
 
 
-def get_last_qualy() -> dict:
+def get_last_qualy():
     '''Возвращает результаты последней квалификации'''
 
-    schedule = fastf1.events.get_event_schedule(CURRENT_YEAR, include_testing=False)
-    t_now = datetime.datetime.now()
+    last_event = get_last_event(4)
 
-    for i in range(len(schedule.index)-1, -1, -1):
-        if schedule.iloc[i].loc['Session4DateUtc'] < t_now:
-            return schedule.iloc[i].get_qualifying()
-    return None
+    try:
+        return last_event.get_qualifying()
+    except:
+        return None
 
 
-def get_last_sprint() -> dict:
+def get_last_sprint():
     '''Возвращает результаты последнего спринта'''
 
-    with open('parser/data/last.json', 'r', encoding='utf-8') as file:
-        data = json.load(file)
-    
-    return data['sprint']
+    last_event = get_last_event(3)
+
+    try:
+        return last_event.get_sprint()
+    except:
+        return None
 
 
-def get_last_sprint_qualy() -> dict:
+def get_last_sprint_qualy():
     '''Возвращает разультаты последней спринт квалификации'''
 
-    with open('parser/data/last.json', 'r', encoding='utf-8') as file:
-        data = json.load(file)
+    last_event = get_last_event(2)
 
-    return data['s_qualy']
+    try:
+        return last_event.get_sprint_qualifying()
+    except:
+        return None
 
 
 if __name__ == '__main__':
