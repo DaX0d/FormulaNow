@@ -143,9 +143,9 @@ async def last_sprint_qualy_handler(message: Message):
     last_s_qualy = get_last_sprint_qualy()
     ans = last_sprint_qualy_ans
     if not isinstance(last_s_qualy, NoneType):
-        last_s_qualy.load(laps=False, telemetry=False, weather=False, messages=False, livedata=False)
+        last_s_qualy.load(laps=True, telemetry=False, weather=False, messages=True, livedata=False)
         # print(last_s_qualy.results)
-        driver = lambda n: driver_translation[last_s_qualy.results.iat[n, 3]]
+        driver = lambda n: drivers_shortname_rus[last_s_qualy.results.iloc[n].loc['Abbreviation']]
         race_name = translate_location_from_session(last_s_qualy)
 
         pole = f'>*1. {driver(0)} - {format_lap_time(last_s_qualy.results.iloc[0].loc['Q3'])}*\n\n'

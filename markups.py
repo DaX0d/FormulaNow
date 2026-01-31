@@ -59,7 +59,7 @@ results_layout = [
 
 results_with_sprint_layout = [
     [last_sprint_button, last_race_button],
-    [last_qualy_button],
+    [last_sprint_qualy_button, last_qualy_button],
     [back_button]
 ]
 
