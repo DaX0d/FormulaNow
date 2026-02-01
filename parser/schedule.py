@@ -3,63 +3,30 @@ import json
 import datetime
 import fastf1.events
 
-from settings import grand_prix_locations, CURRENT_YEAR
-from utils import write_to_json_from_page
+from settings import CURRENT_YEAR
 
 
-SCHEDULE_API = 'https://f1api.dev/api/current'
-LAST_RACE_API = 'https://f1api.dev/api/current/last/race'
-LAST_QUALY_API = 'https://f1api.dev/api/current/last/qualy'
-LAST_SPRINT_API = 'https://f1api.dev/api/current/last/sprint/race'
-LAST_SPRINT_QUALY_API = 'https://f1api.dev/api/current/last/sprint/qualy'
+API = 'https://f1api.dev/api/{}/{}'
 
 
-# Парсеры
-def parse_schedule():
-    '''Запрашивает у API расписание текущего года и записывет его в файл schedule.json'''
+def get_next_track():
+    '''Возвращает информацию о треке'''
 
-    exc = requests.exceptions.ConnectionError('не удается получить расписание')
+    next_event = get_next_race()
 
-    api = requests.get(SCHEDULE_API)
+    response = requests.get(API.format(CURRENT_YEAR, next_event.loc['RoundNumber']))
+    # print(response.text)
 
-    # Проверяем полученные данные (их должно быть много)
-    if api.status_code == 200 and len(api.text.split(',')) > 10:
-        with open('parser/data/schedule.json', 'w', encoding='utf-8') as file:
-            data = json.loads(api.text)
-            json.dump(data, file)
-    else:
-        raise exc
-
-
-def parse_last_race():
-    '''Парсит результаты последней гонки и записывает в файл last.json'''
-
-    race = requests.get(LAST_RACE_API)
-    return write_to_json_from_page(race, 'parser/data/last.json', 'race')
+    if response.status_code != 200:
+        return None
+    
+    try:  
+        data = json.loads(response.text)['race'][0]
+        return data
+    except:
+        return None
 
 
-def parse_last_qualy():
-    '''Парсит результаты последней квалификации и записывает в файл last.json'''
-
-    qualy = requests.get(LAST_QUALY_API)
-    return write_to_json_from_page(qualy, 'parser/data/last.json', 'qualy')
-
-
-def parse_last_sprint():
-    '''Парсит результаты последнего спринта и записавает в файл last.json'''
-
-    sprint = requests.get(LAST_SPRINT_API)
-    return write_to_json_from_page(sprint, 'parser/data/last.json', 'sprint')
-
-
-def parse_last_sprint_qualy():
-    '''Парсит результаты последней спринт квалификации и записывает в файл last.json'''
-
-    s_qualy = requests.get(LAST_SPRINT_QUALY_API)
-    return write_to_json_from_page(s_qualy, 'parser/data/last.json', 's_qualy')
-
-
-# Геттеры
 def get_schedule():
     '''Возвращает расписание'''
 
@@ -68,7 +35,7 @@ def get_schedule():
     return schedule
 
 
-def get_next_race() -> dict:
+def get_next_race():
     '''Возвращает дынные о следующей гонке'''
     
     return fastf1.events.get_events_remaining(datetime.datetime.now(), include_testing=False).iloc[0]
@@ -130,4 +97,4 @@ def get_last_sprint_qualy():
 
 
 if __name__ == '__main__':
-    parse_last_race()
+    pass

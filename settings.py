@@ -72,6 +72,33 @@ schedule_locations_translation = {
     "United Arab Emirates": "🇦🇪 Абу-Даби"
 }
 
+tracks = {
+    "Australia": "australia.png",
+    "China": "china.png",
+    "Japan": "japan.png",
+    "Bahrain": "",
+    "Saudi Arabia": "",
+    "Miami Gardens": "",
+    "Canada": "",
+    "Monaco": "",
+    "Barcelona": "",
+    "Austria": "",
+    "United Kingdom": "",
+    "Belgium": "",
+    "Hungary": "",
+    "Netherlands": "",
+    "Italy": "",
+    "Madrid": "",
+    "Azerbaijan": "",
+    "Singapore": "",
+    "Austin": "",
+    "Mexico": "",
+    "Brazil": "",
+    "Las Vegas": "",
+    "Qatar": "",
+    "United Arab Emirates": ""
+}
+
 session_name_translation = {
     'Practice 1': 'Практика 1',
     'Practice 2': 'Практика 2',

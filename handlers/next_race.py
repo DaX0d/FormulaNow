@@ -1,3 +1,4 @@
+from types import NoneType
 from aiogram import Router
 from aiogram.types import Message, FSInputFile
 from aiogram.filters import Command
@@ -5,16 +6,15 @@ from aiogram.filters import Command
 from settings import (
     next_race_ans,
     next_race_template,
-    track_photoes,
-    grand_prix_locations,
+    tracks,
     track_ans,
     track_template,
     DATE_FORMAT,
     TIME_FORMAT
 )
-from parser.schedule import get_next_race
+from parser.schedule import get_next_race, get_next_track
 from markups import home_markup
-from utils import msk, prev_date, translate_location, translate_session, tg_format
+from utils import msk, translate_location, translate_session, tg_format
 
 
 next_race_router = Router(name='next_race')
@@ -52,17 +52,24 @@ async def track_handler(message: Message):
     '''Отправляет информацию о треке, на котором следующая гонка'''
 
     next_race = get_next_race()
-    photo_file = FSInputFile(f'static/{track_photoes[grand_prix_locations.index(next_race['name'])]}.jpg')
+    next_track = get_next_track()
 
-    ans = track_ans + track_template.format(
-        next_race['name'],
-        next_race['track']['circuitName'],
-        next_race['track']['city'],
-        next_race['track']['circuitLength'][:-2] + ' м',
-        next_race['gp']['laps'],
-        next_race['track']['corners']
-    )
+    if not (isinstance(next_track, NoneType) or isinstance(next_race, NoneType)):
+        file_name = f'static/{tracks[next_race.loc['Country']
+                                     if next_race.loc['Country'] not in ['United States', 'Spain']
+                                     else next_race.loc['Location']]}'
+        print(file_name)
+        photo_file = FSInputFile(file_name)
 
-    ans = ans.replace('-', '\\-')
+        ans = track_ans + track_template.format(
+            translate_location(next_race),
+            next_track['circuit']['circuitName'],
+            next_track['circuit']['city'],
+            next_track['circuit']['circuitLength'][:-2] + ' м',
+            next_track['laps'],
+            next_track['circuit']['corners']
+        )
 
-    return await message.answer_photo(photo_file, parse_mode='MarkdownV2', caption=ans, reply_markup=home_markup)
+        return await message.answer_photo(photo_file, parse_mode='MarkdownV2', caption=tg_format(ans), reply_markup=home_markup)
+    else:
+        return await message.answer('Пока что нет данных', parse_mode='MarkdownV2', reply_markup=home_markup)
