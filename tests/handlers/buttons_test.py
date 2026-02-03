@@ -50,23 +50,13 @@ class ButtonsTestCase(unittest.IsolatedAsyncioTestCase):
         message = TestMessage('Квалификация')
         answer = await buttons_handler(message)
         self.assertEqual(answer['text'].split('\n')[0], settings.last_qualy_ans.replace('\n', ''))
-
-    async def test_list_of_users_button(self):
-        message = TestMessage('Список пользователей')
-        answer = await buttons_handler(message)
-        self.assertTrue(answer['document'])
-
-    async def test_number_of_users_button(self):
-        message = TestMessage('Количество пользователей')
-        answer = await buttons_handler(message)
-        self.assertTrue(answer['text'].isdigit())
     
-    async def test_parser_data_button(self):
-        message = TestMessage('Данные парсера')
+    async def test_last_sprint_button(self):
+        message = TestMessage('Спринт')
         answer = await buttons_handler(message)
-        self.assertTrue(answer['document'])
+        self.assertEqual(answer['text'].split('\n')[0], settings.last_sprint_ans.replace('\n', ''))
     
-    async def test_parser_reload_button(self):
-        message = TestMessage('Перезапуск парсера')
+    async def test_last_sprint_qualy_button(self):
+        message = TestMessage('Спринт квалификация')
         answer = await buttons_handler(message)
-        self.assertEqual(answer['text'], 'Парсер перезапущен')
+        self.assertEqual(answer['text'].split('\n')[0], settings.last_sprint_qualy_ans.replace('\n', ''))

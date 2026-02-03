@@ -15,7 +15,6 @@ def get_next_track():
     next_event = get_next_race()
 
     response = requests.get(API.format(CURRENT_YEAR, next_event.loc['RoundNumber']))
-    # print(response.text)
 
     if response.status_code != 200:
         return None

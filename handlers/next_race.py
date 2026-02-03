@@ -26,7 +26,6 @@ async def next_race_handler(message: Message):
 
     ans = next_race_ans
     next_race = get_next_race()
-    # day, month = map(int, next_race['race_date'].split('.'))
     
     information = next_race_template.format(
         name=translate_location(next_race),
@@ -58,7 +57,6 @@ async def track_handler(message: Message):
         file_name = f'static/{tracks[next_race.loc['Country']
                                      if next_race.loc['Country'] not in ['United States', 'Spain']
                                      else next_race.loc['Location']]}'
-        print(file_name)
         photo_file = FSInputFile(file_name)
 
         ans = track_ans + track_template.format(
