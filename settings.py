@@ -22,7 +22,7 @@ guide_ans = ''
 schedule_template = '>*{}*  *{}*   *{}*\n>    *Гонка*: {}   Квалификация: {}\n'
 next_race_template = '*{name}*\n>Пятница *{fr_date}*\n>    Практика 1: {fp1_t}\n>    {fp2_n}: {fp2_t}\n\n>Суббота *{sat_date}*\n>    {fp3_n}: {fp3_t}\n>    Квалификация: {q_t}\n\n>Воскресенье *{sun_date}*\n>    *Гонка*: {r_t}'
 standings_template = '>`{:27} \\- {:>3}`\n'
-teams_template = '>`{:2}\\. {:<14} \\- {:>3}`\n'
+teams_template = '>`{:2}\\. {:<17} \\- {:>3}`\n'
 track_template = '*{}*\n\n*Название трассы:* {}\n*Город:* {}\n*Длина круга:* {}\n*Число кругов:* {}\n*Число поворотов:* {}'
 notification_template = '*{} состоится {}*\n{}\nНачало в *{}*\n*Не пропусти\\!*'
 race_week_notification_template = '*RACE WEEK*\n*{}*'
@@ -177,7 +177,7 @@ driver_translation = {
     "hulkenberg": "Н.Хюлькенберг",
     "lawson": "Л.Лоусон",
     "leclerc": "Ш.Леклер",
-    "lindblad": "А.Линдблад",
+    "arvid_lindblad": "А.Линдблад",
     "norris": "Л.Норрис",
     "ocon": "Э.Окон",
     "piastri": "О.Пиастри",

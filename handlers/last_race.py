@@ -74,9 +74,10 @@ async def last_qualy_handler(message: Message):
     '''Отправляет результаты последней квалификации'''
 
     last_qualy = get_last_qualy()
+    # print(last_qualy)
     ans = last_qualy_ans
     if not isinstance(last_qualy, NoneType):
-        last_qualy.load(laps=False, telemetry=False, weather=False, messages=False, livedata=False)
+        last_qualy.load(laps=True, telemetry=True, weather=False, messages=True)
         driver = lambda n: driver_translation[last_qualy.results.iat[n, 3]]
         race_name = translate_location_from_session(last_qualy)
 
@@ -143,7 +144,7 @@ async def last_sprint_qualy_handler(message: Message):
     last_s_qualy = get_last_sprint_qualy()
     ans = last_sprint_qualy_ans
     if not isinstance(last_s_qualy, NoneType):
-        last_s_qualy.load(laps=True, telemetry=False, weather=False, messages=True, livedata=False)
+        last_s_qualy.load(laps=True, telemetry=True, weather=False, messages=True, livedata=True)
         # print(last_s_qualy.results)
         driver = lambda n: drivers_shortname_rus[last_s_qualy.results.iloc[n].loc['Abbreviation']]
         race_name = translate_location_from_session(last_s_qualy)
